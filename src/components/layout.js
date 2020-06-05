@@ -5,47 +5,54 @@
  * See: https://www.gatsbyjs.org/docs/use-static-query/
  */
 
-import React from "react"
-import PropTypes from "prop-types"
-import { useStaticQuery, graphql } from "gatsby"
+import React from 'react';
+import PropTypes from 'prop-types';
+import NavBar from './navbar';
 
-import Header from "./header"
-import "./layout.css"
+const Layout = ({ renderContent }) => {
+  const getInnerHeight = () => {
+    return typeof window !== `undefined` ? window.innerHeight : 0;
+  };
 
-const Layout = ({ children }) => {
-  const data = useStaticQuery(graphql`
-    query SiteTitleQuery {
-      site {
-        siteMetadata {
-          title
-        }
-      }
-    }
-  `)
+  const [innerHeight, setInnerHeight] = React.useState(getInnerHeight());
+
+  React.useEffect(() => {
+    let vh = innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  }, [innerHeight]);
+
+  const handleResize = () => {
+    setInnerHeight(window.innerHeight);
+  };
+
+  React.useEffect(() => {
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   return (
-    <>
-      <Header siteTitle={data.site.siteMetadata.title} />
-      <div
-        style={{
-          margin: `0 auto`,
-          maxWidth: 960,
-          padding: `0 1.0875rem 1.45rem`,
-        }}
-      >
-        <main>{children}</main>
-        <footer>
-          © {new Date().getFullYear()}, Built with
-          {` `}
-          <a href="https://www.gatsbyjs.org">Gatsby</a>
-        </footer>
+    <div className="h-full antialiased px-2 pt-2">
+      <NavBar />
+      <div className="flex flex-col items-center w-full mt-16">
+        <main className="flex flex-col items-center w-full">
+          {renderContent({ innerHeight: innerHeight - 62 })}
+        </main>
       </div>
-    </>
-  )
-}
-
+    </div>
+  );
+};
 Layout.propTypes = {
-  children: PropTypes.node.isRequired,
-}
+  renderContent: PropTypes.func,
+};
+Layout.defaultProps = {
+  renderContent: () => <div />,
+};
+export default Layout;
 
-export default Layout
+/*
+
+      <footer>© {new Date().getFullYear()}</footer>
+*/
