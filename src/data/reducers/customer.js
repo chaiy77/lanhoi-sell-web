@@ -45,33 +45,21 @@ const reducers = [
   //   (state, action) => ({ ...state, user: action.payload }),
   // ],
   // [types.AUTO_LOGIN_FAILURE, state => ({ ...state, user: null })],
-  [
-    types.SET_CUSTOMER,
-    (state, action) => ({ ...state, customer: action.payload }),
-  ],
-  [
-    types.SET_ROOF,
-    (state, action) => ({ ...state, customer: { roofs: action.payload } }),
-  ],
+  [types.SET_CUSTOMER, (state, action) => ({ ...state, data: action.payload })],
+  [types.SET_ROOF, (state, action) => ({ ...state, roofs: action.payload })],
   [
     types.SET_COLUMN,
-    (state, action) => ({ ...state, customer: { columns: action.payload } }),
+    (state, action) => ({ ...state, columns: action.payload }),
   ],
   [
     types.SET_CONCRETE,
-    (state, action) => ({ ...state, customer: { concrete: action.payload } }),
+    (state, action) => ({ ...state, concrete: action.payload }),
   ],
-  [
-    types.SET_FENCE,
-    (state, action) => ({ ...state, customer: { fences: action.payload } }),
-  ],
-  [
-    types.SET_FLOOR,
-    (state, action) => ({ ...state, customer: { floor: action.payload } }),
-  ],
+  [types.SET_FENCE, (state, action) => ({ ...state, fences: action.payload })],
+  [types.SET_FLOOR, (state, action) => ({ ...state, floor: action.payload })],
   [
     types.SET_GROUNDWALL,
-    (state, action) => ({ ...state, customer: { groundWall: action.payload } }),
+    (state, action) => ({ ...state, groundWall: action.payload }),
   ],
 ];
 

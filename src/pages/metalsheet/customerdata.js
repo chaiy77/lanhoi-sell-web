@@ -95,9 +95,9 @@ const CustomerData = ({ setRoofArea }) => {
 
   const handleNext = data => {
     console.log(RoofValue);
-    console.log(data);
+    // console.log(data);
     setRoofArea(RoofValue);
-    // navigate('metalsheet/prequatation');
+    navigate('metalsheet/prequatation');
   };
 
   const roofValueChange = (i, value) => {

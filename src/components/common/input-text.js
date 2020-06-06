@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import PropTypes from 'prop-types';
 
-const TextInput = ({ text }) => {
-  const handleChange = e => {
-    e.preventDefault();
-    console.log(e.target.value);
-  };
+const TextInput = forwardRef(({ text, name, register, onChange }, ref) => {
+  // const handleChange = e => {
+  //   e.preventDefault();
+  //   console.log(e.target.value);
+  // };
   return (
     <div>
       <input
@@ -15,17 +15,25 @@ const TextInput = ({ text }) => {
         id="grid-last-name"
         type="text"
         placeholder={text}
-        onChange={e => handleChange(e)}
+        onChange={e => onChange(e)}
+        name={name}
+        ref={register}
       />
     </div>
   );
-};
+});
 
 TextInput.propTypes = {
   text: PropTypes.string,
+  name: PropTypes.string,
+  register: PropTypes.func,
+  onChange: PropTypes.func,
 };
 TextInput.defaultProps = {
   text: 'insert',
+  name: 'defaultName',
+  register: () => {},
+  onChange: () => {},
 };
 
 export default TextInput;

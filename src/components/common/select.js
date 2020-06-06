@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import PropTypes from 'prop-types';
 
-const Select = ({ options, onChange }) => {
-  const handleChange = e => {
-    e.preventDefault();
-    console.log(e.target.value);
-  };
+const Select = forwardRef(({ options, onChange, name, register }, ref) => {
+  // const handleChange = e => {
+  //   e.preventDefault();
+  //   console.log(e.target.value);
+  // };
   return (
     <div className="relative">
       <select
@@ -14,6 +14,8 @@ const Select = ({ options, onChange }) => {
         focus:outline-none focus:bg-white focus:border-gray-500"
         id="grid-state"
         onChange={e => onChange(e)}
+        name={name}
+        ref={register}
       >
         <option value="">select product</option>
         {options.map((opt, idx) => (
@@ -32,15 +34,19 @@ const Select = ({ options, onChange }) => {
       </div>
     </div>
   );
-};
+});
 
 Select.propTypes = {
   options: PropTypes.array,
   onChange: PropTypes.func,
+  name: PropTypes.string,
+  register: PropTypes.func,
 };
 Select.defaultProps = {
   options: [1, 2, 3],
   onChange: () => {},
+  name: 'defaultName',
+  register: () => {},
 };
 
 export default Select;
