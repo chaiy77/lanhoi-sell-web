@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'gatsby';
+import { Link, navigate } from 'gatsby';
 import { connect } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import * as R from 'ramda';
@@ -7,17 +7,18 @@ import Layout from 'components/layout';
 import PropTypes, { object } from 'prop-types';
 import { Select, TextInput, AddCartButton, Button } from 'components/common';
 import { ProductGroups } from 'data/mockup-data';
+import { actions } from 'data/reducers/customer';
 
 //Groups need to be loaded from DB, created by admin
 const Groups = R.find(R.propEq('type', 'MetalSheet'))(ProductGroups);
 const itemTest = { name: 'test' };
 
-const PreQuatation = ({ roofs }) => {
+const PreQuatation = ({ roofs, setRoofArea }) => {
   const [itemList, setItemList] = useState([]);
   const { register, handleSubmit, watch, errors } = useForm();
 
-  function SheetCalculation(w, h) {
-    console.log(w);
+  function SheetCalculation() {
+    console.log('shhet calculation');
     return 10;
   }
 
@@ -96,6 +97,7 @@ const PreQuatation = ({ roofs }) => {
         // }
       });
     });
+    setRoofArea(_roofs);
   };
 
   return (
@@ -103,64 +105,88 @@ const PreQuatation = ({ roofs }) => {
       renderContent={() => {
         return (
           <div className="sm:w-full md:w-5/6 xl:w-1/2">
-            <form onSubmit={handleSubmit(addToCartClick)}>
+            <div className="flex flex-row justify-between">
+              <div>
+                <Button
+                  onClick={() => navigate('/metalsheet/customerdata')}
+                  type="button"
+                  label="Back"
+                />
+              </div>
               <div className="flex items-center">Metal Sheet</div>
-              <div>
-                {roofs.map((area, area_index) => {
-                  const w = area.wide;
-                  const l = area.long;
-                  return (
-                    <div key={area_index}>
-                      <div className="flex flex-row border border-gray-500 bg-blue-400 p-2 rounded-t-md">
-                        <div className="mx-2">Area No. {area.no} </div>
-                        <div className="mx-3"> Wide = {w} m.</div>
-                        <div className="mx-3"> long = {l} m.</div>
-                      </div>
-                      <div className="border border-gray-500  rounded-b-md">
-                        {Groups.groups.map((group, i) => {
-                          return (
-                            <div
-                              className="flex flex-row my-2 py-2 px-4 "
-                              key={i}
-                            >
-                              <div className="w-1/6"> {group} </div>
-                              <div className="w-3/6 mx-3 ">
-                                <Select
-                                  name={`${area.no}` + '_product_' + `${group}`}
-                                  register={register}
-                                  onChange={e =>
-                                    changeItemList(e, group, area.no, 'product')
-                                  }
-                                />
+              <Button
+                // to="/metalsheet/prequatation"
+                type="button"
+                label="Next"
+              />
+            </div>
+            <div className="mt-3">
+              <form onSubmit={handleSubmit(addToCartClick)}>
+                <div>
+                  {roofs.map((area, area_index) => {
+                    const w = area.wide;
+                    const l = area.long;
+                    return (
+                      <div key={area_index}>
+                        <div className="flex flex-row border border-gray-500 bg-blue-400 p-2 rounded-t-md">
+                          <div className="mx-2">Area No. {area.no} </div>
+                          <div className="mx-3"> Wide = {w} m.</div>
+                          <div className="mx-3"> long = {l} m.</div>
+                        </div>
+                        <div className="border border-gray-500  rounded-b-md">
+                          {Groups.groups.map((group, i) => {
+                            return (
+                              <div
+                                className="flex flex-row my-2 py-2 px-4 "
+                                key={i}
+                              >
+                                <div className="w-1/6"> {group} </div>
+                                <div className="w-3/6 mx-3 ">
+                                  <Select
+                                    name={
+                                      `${area.no}` + '_product_' + `${group}`
+                                    }
+                                    register={register}
+                                    onChange={e =>
+                                      changeItemList(
+                                        e,
+                                        group,
+                                        area.no,
+                                        'product'
+                                      )
+                                    }
+                                  />
+                                </div>
+                                <div className=" w-1/6 mx-3">
+                                  <TextInput
+                                    name={`${area.no}` + '_unit_' + `${group}`}
+                                    register={register}
+                                    // text={() => SheetCalculation()}
+                                    defaultValue={SheetCalculation()}
+                                    onChange={e =>
+                                      changeItemList(e, group, area.no, 'unit')
+                                    }
+                                  />
+                                </div>
+                                <div className="w-1/6"> units</div>
                               </div>
-                              <div className=" w-1/6 mx-3">
-                                <TextInput
-                                  name={`${area.no}` + '_unit_' + `${group}`}
-                                  register={register}
-                                  text="xxx"
-                                  onChange={e =>
-                                    changeItemList(e, group, area.no, 'unit')
-                                  }
-                                />
-                              </div>
-                              <div className="w-1/6"> units</div>
-                            </div>
-                          );
-                        })}
+                            );
+                          })}
+                        </div>
+                        <div className="text-red-700 border-red-400 mt-1 mb-3 py-2 px-4">
+                          {Object.keys(errors).length > 0 &&
+                            'There are some error, empty product OR unit'}
+                        </div>
                       </div>
-                      <div className="text-red-700 border-red-400 mt-1 mb-3 py-2 px-4">
-                        {Object.keys(errors).length > 0 &&
-                          'There are some error, empty product OR unit'}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-              <div>
-                {/* <AddCartButton item={itemTest} /> */}
-                <Button label="Add to Cart" type="submit" />
-              </div>
-            </form>
+                    );
+                  })}
+                </div>
+                <div>
+                  {/* <AddCartButton item={itemTest} /> */}
+                  <Button label="Add to Cart" type="submit" />
+                </div>
+              </form>
+            </div>
           </div>
         );
       }}
@@ -169,6 +195,7 @@ const PreQuatation = ({ roofs }) => {
 };
 
 PreQuatation.propTypes = {
+  setRoofArea: PropTypes.func,
   roofs: PropTypes.arrayOf(
     PropTypes.shape({
       no: PropTypes.number,
@@ -178,8 +205,14 @@ PreQuatation.propTypes = {
   ),
 };
 
-PreQuatation.defaultProps = {};
+PreQuatation.defaultProps = { roofs: [], setRoofArea: () => {} };
+
+const mapDispatchToProps = dispatch => {
+  return {
+    setRoofArea: areas => dispatch(actions.setRoof(areas)),
+  };
+};
 
 const mapStateToProps = state => ({ roofs: state.Customer.roofs });
 
-export default connect(mapStateToProps, null)(PreQuatation);
+export default connect(mapStateToProps, mapDispatchToProps)(PreQuatation);

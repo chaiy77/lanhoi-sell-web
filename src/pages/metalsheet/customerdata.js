@@ -9,86 +9,90 @@ import { connect } from 'react-redux';
 import { actions } from 'data/reducers/customer';
 // import lanhoi from 'images/lanhoi.png';
 
-const WideLongInput = forwardRef(({ i, valueChange, register }, ref) => {
-  const [roofValue, setRoofValue] = useState({ no: i, wide: 0, long: 0 });
+const WideLongInput = forwardRef(
+  ({ i, valueChange, register, roofData }, ref) => {
+    const [roofValue, setRoofValue] = useState({ no: i, wide: 0, long: 0 });
 
-  useEffect(() => {
-    valueChange(i, roofValue);
-  }, [roofValue]);
+    useEffect(() => {
+      valueChange(i, roofValue);
+    }, [roofValue]);
 
-  const handleValueChange = (e, side) => {
-    e.preventDefault();
-    const value = e.target.value;
-    const _roofValue = { ...roofValue };
-    side === 'wide'
-      ? (_roofValue.wide = value * 1)
-      : (_roofValue.long = value * 1);
-    setRoofValue(_roofValue);
-  };
+    const handleValueChange = (e, side) => {
+      e.preventDefault();
+      const value = e.target.value;
+      const _roofValue = { ...roofValue };
+      side === 'wide'
+        ? (_roofValue.wide = value * 1)
+        : (_roofValue.long = value * 1);
+      setRoofValue(_roofValue);
+    };
 
-  return (
-    <div className="mt-2 border rounded p-5">
-      <div>Area No. {i}</div>
-      <div className="flex flex-row mt-2">
-        <div className="flex w-1/2">
-          <div className="flex items-center "> Wide </div>
-          <input
-            name={'wide_' + `${i}`}
-            type="text"
-            className={
-              ' w-1/2 shadow appearance-none border rounded py-2 px-3 mx-5' +
-              ' text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-            }
-            placeholder="0.0 M."
-            ref={register({
-              validate: {
-                positiveNumber: value => parseFloat(value) > 0,
-              },
-            })}
-            onChange={e => {
-              handleValueChange(e, 'wide');
-            }}
-          />
-        </div>
-        <div className="flex w-1/2">
-          <div className="flex items-center "> Long </div>
-          <input
-            name={'long_' + `${i}`}
-            type="float"
-            className={
-              ' w-1/2 shadow appearance-none border rounded py-2 px-3 mx-5' +
-              ' text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-            }
-            placeholder="0.0 M."
-            ref={register({
-              validate: {
-                positiveNumber: value => parseFloat(value) > 0,
-              },
-            })}
-            onChange={e => {
-              handleValueChange(e, 'long');
-            }}
-          />
-          <div className="flex items-center">M.</div>
+    return (
+      <div className="mt-2 border rounded p-5">
+        <div>Area No. {i}</div>
+        <div className="flex flex-row mt-2">
+          <div className="flex w-1/2">
+            <div className="flex items-center "> Wide </div>
+            <input
+              name={'wide_' + `${i}`}
+              defaultValue={roofData.wide}
+              type="text"
+              className={
+                ' w-1/2 shadow appearance-none border rounded py-2 px-3 mx-5' +
+                ' text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+              }
+              ref={register({
+                validate: {
+                  positiveNumber: value => parseFloat(value) > 0,
+                },
+              })}
+              onChange={e => {
+                handleValueChange(e, 'wide');
+              }}
+            />
+          </div>
+          <div className="flex w-1/2">
+            <div className="flex items-center "> Long </div>
+            <input
+              name={'long_' + `${i}`}
+              type="text"
+              defaultValue={roofData.long}
+              className={
+                ' w-1/2 shadow appearance-none border rounded py-2 px-3 mx-5' +
+                ' text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+              }
+              ref={register({
+                validate: {
+                  positiveNumber: value => parseFloat(value) > 0,
+                },
+              })}
+              onChange={e => {
+                handleValueChange(e, 'long');
+              }}
+            />
+            <div className="flex items-center">M.</div>
+          </div>
         </div>
       </div>
-    </div>
-  );
-});
+    );
+  }
+);
 
 WideLongInput.propsType = {
   i: PropTypes.number,
   valueChange: PropTypes.func,
   register: PropTypes.func,
+  roofData: PropTypes.object,
 };
 
 WideLongInput.defaultProps = {
   i: 1,
   valueChange: () => {},
   register: () => {},
+  roofData: { no: 1, wide: 0, long: 0 },
 };
 
-const CustomerData = ({ setRoofArea }) => {
+const CustomerData = ({ setRoofArea, roofs }) => {
   const [RoofArea, addRoof] = useState([]);
   const [RoofValue, setRoofValue] = useState([]);
   const { register, handleSubmit, watch, errors } = useForm();
@@ -99,6 +103,13 @@ const CustomerData = ({ setRoofArea }) => {
     setRoofArea(RoofValue);
     navigate('metalsheet/prequatation');
   };
+
+  useEffect(() => {
+    // console.log(roofs);
+    if (roofs.length > 0) {
+      setRoofValue(roofs);
+    }
+  }, [roofs]);
 
   const roofValueChange = (i, value) => {
     const _roofValue = [...RoofValue];
@@ -127,6 +138,34 @@ const CustomerData = ({ setRoofArea }) => {
     );
   };
 
+  const RoofsDataComponent = () => {
+    // console.log('roof data commpoent');
+    // console.log(roofs);
+    if (roofs && roofs.length > 0) {
+      // console.log(roofs.length);
+      return roofs.map((roof, i) => {
+        return (
+          <WideLongInput
+            i={i + 1}
+            key={i + 1}
+            valueChange={roofValueChange}
+            roofData={roof}
+            register={register}
+          />
+        );
+      });
+    } else {
+      return (
+        <WideLongInput
+          i={1}
+          key="1"
+          valueChange={roofValueChange}
+          register={register}
+        />
+      );
+    }
+  };
+
   return (
     <Layout
       renderContent={() => {
@@ -145,13 +184,7 @@ const CustomerData = ({ setRoofArea }) => {
                   Next
                 </Button>
               </div>
-
-              <WideLongInput
-                i={1}
-                key="1"
-                valueChange={roofValueChange}
-                register={register}
-              />
+              {RoofsDataComponent()}
               {RoofArea}
               <div className="text-red-700 border-red-400 mt-4 py-2 px-4">
                 {Object.keys(errors).length > 0 &&
@@ -174,10 +207,12 @@ const CustomerData = ({ setRoofArea }) => {
 
 CustomerData.propTypes = {
   setRoofArea: PropTypes.func,
+  roofs: PropTypes.array,
 };
 
 CustomerData.defaultProps = {
   setRoofArea: () => {},
+  roofs: [],
 };
 
 const mapDispatchToProps = dispatch => {
@@ -186,4 +221,6 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(null, mapDispatchToProps)(CustomerData);
+const mapStateToPProps = state => ({ roofs: state.Customer.roofs });
+
+export default connect(mapStateToPProps, mapDispatchToProps)(CustomerData);
