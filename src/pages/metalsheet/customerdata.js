@@ -2,75 +2,221 @@ import React, { useState, useEffect, forwardRef } from 'react';
 import * as R from 'ramda';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
-import { Button } from 'components/common';
+import { Button, Select, Checkbox } from 'components/common';
 import Layout from 'components/layout';
 import { navigate } from 'gatsby';
 import { connect } from 'react-redux';
 import { actions } from 'data/reducers/customer';
-// import lanhoi from 'images/lanhoi.png';
 
-const WideLongInput = forwardRef(
-  ({ i, valueChange, register, roofData }, ref) => {
-    const [roofValue, setRoofValue] = useState({ no: i, wide: 0, long: 0 });
+import { RoofTypes } from 'data/mockup-data';
+import lanhoi from 'images/lanhoi.png';
+
+const RoofDataIput = forwardRef(
+  ({ i, valueChange, register, roofData, setValue }, ref) => {
+    const [roofValue, setRoofValue] = useState({
+      no: i,
+      type: '',
+      A: 0,
+      B: 0,
+      C: 0,
+      pDist: 0,
+      topCover: false,
+      endCurve: false,
+    });
+    const [needA, setNeedA] = useState(true);
+    const [needB, setNeedB] = useState(true);
+    const [needC, setNeedC] = useState(true);
+    const [roofTypes, setRoofTypes] = useState([]);
 
     useEffect(() => {
+      console.log('set new roofValue', roofValue);
       valueChange(i, roofValue);
+      console.log(roofData);
     }, [roofValue]);
 
+    useEffect(() => {
+      const _roofTypes = RoofTypes.map(r => r.name);
+      console.log('roof types :', _roofTypes);
+      setRoofTypes(_roofTypes);
+    }, [RoofTypes]);
+
+    const setInputInitValue = () => {
+      setValue('A_' + `${i}`, 0);
+      setValue('B_' + `${i}`, 0);
+      setValue('C_' + `${i}`, 0);
+      setValue('pDist_' + `${i}`, 0);
+      setValue('topCover' + `${i}`, false);
+      setValue('endCurve' + `${i}`, false);
+    };
+
     const handleValueChange = (e, side) => {
-      e.preventDefault();
-      const value = e.target.value;
+      // e.preventDefault();
       const _roofValue = { ...roofValue };
-      side === 'wide'
-        ? (_roofValue.wide = value * 1)
-        : (_roofValue.long = value * 1);
+      // side === 'wide'
+      //   ? (_roofValue.wide = value * 1)
+      //   : (_roofValue.long = value * 1);
+      if (side === 'A') _roofValue.A = e.target.value * 1;
+      if (side === 'B') _roofValue.B = e.target.value * 1;
+      if (side === 'C') _roofValue.C = e.target.value * 1;
+      if (side === 'pDist') _roofValue.pDist = e.target.value * 1;
+      if (side === 'topCover') _roofValue.topCover = e;
+      if (side === 'endCurve') _roofValue.endCurve = e;
       setRoofValue(_roofValue);
     };
+
+    const changeRoofType = e => {
+      const _type = e.target.value;
+      const _roofValue = { ...roofValue };
+      if (_type) {
+        let _roofType = R.find(R.propEq('name', _type))(RoofTypes);
+        setNeedA(_roofType.needA);
+        setNeedB(_roofType.needB);
+        setNeedC(_roofType.needC);
+        _roofValue.type = _type;
+        setRoofValue(_roofValue);
+        setInputInitValue();
+      }
+    };
+
+    const dataInputStyle =
+      'w-4/6 shadow appearance-none border rounded py-1 px-2 mx-5 ' +
+      ' text-gray-700 leading-tight focus:outline-none focus:shadow-outline';
+
+    const pDistInputStyle =
+      'w-3/6 shadow appearance-none border rounded py-1 px-2' +
+      ' text-gray-700 leading-tight focus:outline-none focus:shadow-outline';
 
     return (
       <div className="mt-2 border rounded p-5">
         <div>Area No. {i}</div>
-        <div className="flex flex-row mt-2">
-          <div className="flex w-1/2">
-            <div className="flex items-center "> Wide </div>
-            <input
-              name={'wide_' + `${i}`}
-              defaultValue={roofData.wide}
-              type="text"
-              className={
-                ' w-1/2 shadow appearance-none border rounded py-2 px-3 mx-5' +
-                ' text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-              }
-              ref={register({
-                validate: {
-                  positiveNumber: value => parseFloat(value) > 0,
-                },
-              })}
-              onChange={e => {
-                handleValueChange(e, 'wide');
-              }}
-            />
-          </div>
-          <div className="flex w-1/2">
-            <div className="flex items-center "> Long </div>
-            <input
-              name={'long_' + `${i}`}
-              type="text"
-              defaultValue={roofData.long}
-              className={
-                ' w-1/2 shadow appearance-none border rounded py-2 px-3 mx-5' +
-                ' text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-              }
-              ref={register({
-                validate: {
-                  positiveNumber: value => parseFloat(value) > 0,
-                },
-              })}
-              onChange={e => {
-                handleValueChange(e, 'long');
-              }}
-            />
-            <div className="flex items-center">M.</div>
+        <div className="flex justify-center items-center ">
+          <div className="flex flex-col  justify-center items-center">
+            <div className="flex flex-row ">
+              <div>รูปแบบหลังคา</div>
+              <Select
+                name={'no' + `${i}`}
+                onChange={e => changeRoofType(e)}
+                options={roofTypes}
+                register={register}
+              />
+            </div>
+            <div className="flex ">
+              <img src={lanhoi} />
+            </div>
+            <div className="flex flex-row flex-wrap  ">
+              <div className="flex flex-col  sm:w-full md:w-1/2 xl:w-1/2 ">
+                <div className="flex flex-row mt-2">
+                  <div className="">A :</div>
+                  <input
+                    name={'A_' + `${i}`}
+                    defaultValue={roofData.A}
+                    type="text"
+                    disabled={!needA}
+                    className={dataInputStyle}
+                    ref={
+                      !needA
+                        ? register
+                        : register({
+                            validate: {
+                              positiveNumber: value => parseFloat(value) > 0,
+                            },
+                          })
+                    }
+                    onChange={e => {
+                      handleValueChange(e, 'A');
+                    }}
+                  />
+                </div>
+
+                <div className="flex flex-row mt-2 ">
+                  <div>B :</div>
+                  <input
+                    name={'B_' + `${i}`}
+                    defaultValue={roofData.B}
+                    type="text"
+                    disabled={!needB}
+                    className={dataInputStyle}
+                    ref={
+                      !needB
+                        ? register
+                        : register({
+                            validate: {
+                              positiveNumber: value => parseFloat(value) > 0,
+                            },
+                          })
+                    }
+                    onChange={e => {
+                      handleValueChange(e, 'B');
+                    }}
+                  />
+                </div>
+                <div className="flex flex-row mt-2 ">
+                  <div>C :</div>
+                  <input
+                    name={'C_' + `${i}`}
+                    defaultValue={roofData.C}
+                    type="text"
+                    disabled={!needC}
+                    className={dataInputStyle}
+                    ref={
+                      !needC
+                        ? register
+                        : register({
+                            validate: {
+                              positiveNumber: value => {
+                                console.log(value);
+                                parseFloat(value) > 0;
+                              },
+                            },
+                          })
+                    }
+                    onChange={e => {
+                      handleValueChange(e, 'C');
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col sm:w-full md:w-1/2 xl:w-1/2">
+                <div className="flex flex-row mt-2">
+                  <div className="w-20">ระยะแป :</div>
+                  <input
+                    name={'pDist_' + `${i}`}
+                    defaultValue={roofData.pDist}
+                    type="text"
+                    className={pDistInputStyle}
+                    ref={register({
+                      validate: {
+                        positiveNumber: value => parseFloat(value) > 0,
+                      },
+                    })}
+                    onChange={e => {
+                      handleValueChange(e, 'pDist');
+                    }}
+                  />
+                </div>
+                <div className="flex flex-row mt-3">
+                  <div className="w-20">ครอบจั่ว :</div>
+                  <Checkbox
+                    name={'topCover' + `${i}`}
+                    onCheck={e => {
+                      handleValueChange(e, 'topCover');
+                    }}
+                    register={register}
+                  />
+                </div>
+                <div className=" flex flex-row  mt-3 ">
+                  <div className="w-20">ย้ำโค้ง :</div>
+
+                  <Checkbox
+                    name={'endCurve' + `${i}`}
+                    onCheck={e => {
+                      handleValueChange(e, 'endCurve');
+                    }}
+                    register={register}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -78,30 +224,42 @@ const WideLongInput = forwardRef(
   }
 );
 
-WideLongInput.propsType = {
+RoofDataIput.propsType = {
   i: PropTypes.number,
   valueChange: PropTypes.func,
   register: PropTypes.func,
   roofData: PropTypes.object,
+  setValue: PropTypes.func,
 };
 
-WideLongInput.defaultProps = {
+RoofDataIput.defaultProps = {
   i: 1,
   valueChange: () => {},
   register: () => {},
-  roofData: { no: 1, wide: 0, long: 0 },
+  setValue: () => {},
+  roofData: {
+    no: 1,
+    A: 0,
+    B: 0,
+    C: 0,
+    pDist: 0,
+    topCover: false,
+    endCurve: false,
+    type: '',
+  },
 };
 
 const CustomerData = ({ setRoofArea, roofs }) => {
   const [RoofArea, addRoof] = useState([]);
   const [RoofValue, setRoofValue] = useState([]);
-  const { register, handleSubmit, watch, errors } = useForm();
+  const { register, handleSubmit, setValue, watch, errors } = useForm();
 
   const handleNext = data => {
     console.log(RoofValue);
-    // console.log(data);
+    console.log('data:', data);
+    //add roof data to redux
     setRoofArea(RoofValue);
-    navigate('metalsheet/prequatation');
+    //navigate('metalsheet/prequatation');
   };
 
   useEffect(() => {
@@ -120,6 +278,7 @@ const CustomerData = ({ setRoofArea, roofs }) => {
       ? _roofValue.push(value)
       : (_roofValue[_roofIndex] = value);
 
+    console.log(_roofValue);
     setRoofValue(_roofValue);
   };
 
@@ -128,11 +287,12 @@ const CustomerData = ({ setRoofArea, roofs }) => {
     const _i = _area.length + 2;
     addRoof(area =>
       area.concat(
-        <WideLongInput
+        <RoofDataIput
           i={_i}
           key={_i}
-          valueChange={roofValueChange}
+          //valueChange={roofValueChange}
           register={register}
+          setValue={setValue}
         />
       )
     );
@@ -145,22 +305,24 @@ const CustomerData = ({ setRoofArea, roofs }) => {
       // console.log(roofs.length);
       return roofs.map((roof, i) => {
         return (
-          <WideLongInput
+          <RoofDataIput
             i={i + 1}
             key={i + 1}
-            valueChange={roofValueChange}
+            //valueChange={roofValueChange}
             roofData={roof}
             register={register}
+            setValue={setValue}
           />
         );
       });
     } else {
       return (
-        <WideLongInput
+        <RoofDataIput
           i={1}
           key="1"
-          valueChange={roofValueChange}
+          //valueChange={roofValueChange}
           register={register}
+          setValue={setValue}
         />
       );
     }

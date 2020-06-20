@@ -11,4 +11,9 @@ const ProductGroups = [
   { type: 'Floor Sheet', groups: ['Concrete'], image: metalsheetDemo },
 ];
 
-export { ProductGroups };
+const RoofTypes = [
+  { name: 'type A', needA: true, needB: true, needC: true },
+  { name: 'type B', needA: true, needB: true, needC: false },
+];
+
+export { ProductGroups, RoofTypes };

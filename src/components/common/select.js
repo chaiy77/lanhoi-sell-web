@@ -15,7 +15,7 @@ const Select = forwardRef(({ options, onChange, name, register }, ref) => {
         id="grid-state"
         onChange={e => onChange(e)}
         name={name}
-        ref={register}
+        ref={register()}
       >
         <option value="">select product</option>
         {options.map((opt, idx) => (

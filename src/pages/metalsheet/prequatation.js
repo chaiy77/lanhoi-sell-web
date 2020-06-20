@@ -14,39 +14,25 @@ const Groups = R.find(R.propEq('type', 'MetalSheet'))(ProductGroups);
 const itemTest = { name: 'test' };
 
 const PreQuatation = ({ roofs, setRoofArea }) => {
-  const [itemList, setItemList] = useState([]);
+  const [roofsData, setRoofsData] = useState([]);
   const { register, handleSubmit, watch, errors } = useForm();
+
+  useEffect(() => {
+    setRoofsData(roofs);
+  }, [roofs]);
 
   function SheetCalculation() {
     console.log('shhet calculation');
     return 10;
   }
-
-  const changeItemList = (e, group, area, type) => {
-    // console.log('change item');
-    // console.log(e.target.value);
-    // console.log(group, area, type);
-    // const value = e.target.value;
-    // let _roofs = [...roofs];
-    // const _areaIndex = R.findIndex(R.propEq('no', area))(_roofs);
-    // console.log(_areaIndex);
-    // const _product = R.merge(R.find(R.propEq('no', area))(_roofs), {
-    //   [group]: value,
-    // });
-    // console.log(_product);
-    // _roofs[_areaIndex] = _product;
-    // console.log(_roofs);
-  };
-
   const addToCartClick = data => {
-    console.log(' add cart click');
-    console.log(data);
+    // console.log(' add cart click');
+    // console.log(data);
     let prodType = Groups.groups;
-    console.log(prodType);
+    // console.log(prodType);
     let _temp = {};
     let _orders = [];
-    let _dataTemp;
-    let _roofs = [...roofs];
+    let _roofs = [...roofsData];
     let _no = 0;
 
     _roofs.map(roof => {
@@ -78,23 +64,10 @@ const PreQuatation = ({ roofs, setRoofArea }) => {
               console.log(_temp);
               _orders.push(_temp);
               roof['orders'] = _orders;
-              // _orders.push(_temp);
-              // _roofs.map((area, idx) => {
-              //   if (area.no === _no) area['orders'] = _orders;
-              // });
-              console.log('ROOFS : ', _roofs);
+              // console.log('ROOFS : ', _roofs);
             }
           }
         });
-
-        // if (R.both(R.has('name'), R.has('amount'))(_temp)) {
-        //   _orders.push(_temp);
-        //   roof['orders'] = _orders;
-        //   // _roofs.map((area, idx) => {
-        //   //   if (area.no === _no) area['orders'] = _orders;
-        //   // });
-        //   console.log(_roofs);
-        // }
       });
     });
     setRoofArea(_roofs);
@@ -123,7 +96,7 @@ const PreQuatation = ({ roofs, setRoofArea }) => {
             <div className="mt-3">
               <form onSubmit={handleSubmit(addToCartClick)}>
                 <div>
-                  {roofs.map((area, area_index) => {
+                  {roofsData.map((area, area_index) => {
                     const w = area.wide;
                     const l = area.long;
                     return (
@@ -161,8 +134,7 @@ const PreQuatation = ({ roofs, setRoofArea }) => {
                                   <TextInput
                                     name={`${area.no}` + '_unit_' + `${group}`}
                                     register={register}
-                                    // text={() => SheetCalculation()}
-                                    defaultValue={SheetCalculation()}
+                                    defaultValue={() => SheetCalculation()}
                                     onChange={e =>
                                       changeItemList(e, group, area.no, 'unit')
                                     }
