@@ -1,7 +1,7 @@
 import React, { useState, useEffect, forwardRef } from 'react';
 import * as R from 'ramda';
-import PropTypes from 'prop-types';
-import { useForm } from 'react-hook-form';
+import PropTypes, { bool } from 'prop-types';
+import { useForm, Controller } from 'react-hook-form';
 import { Button, Select, Checkbox } from 'components/common';
 import Layout from 'components/layout';
 import { navigate } from 'gatsby';
@@ -13,30 +13,29 @@ import lanhoi from 'images/lanhoi.png';
 
 const RoofDataIput = forwardRef(
   ({ i, valueChange, register, roofData, setValue }, ref) => {
-    const [roofValue, setRoofValue] = useState({
-      no: i,
-      type: '',
-      A: 0,
-      B: 0,
-      C: 0,
-      pDist: 0,
-      topCover: false,
-      endCurve: false,
-    });
     const [needA, setNeedA] = useState(true);
     const [needB, setNeedB] = useState(true);
     const [needC, setNeedC] = useState(true);
     const [roofTypes, setRoofTypes] = useState([]);
 
     useEffect(() => {
-      console.log('set new roofValue', roofValue);
-      valueChange(i, roofValue);
-      console.log(roofData);
-    }, [roofValue]);
+      // console.log('set new roofValue', roofValue);
+      // valueChange(i, roofValue);
+      console.log('useEffect : ', roofData);
+      if (!R.isEmpty(roofData)) {
+        console.log(roofData.data);
+        setValue('A_' + `${i}`, roofData.data.A);
+        setValue('B_' + `${i}`, roofData.data.B);
+        setValue('C_' + `${i}`, roofData.data.C);
+        setValue('pDist_' + `${i}`, roofData.data.pDist);
+        // setValue('topCover_' + `${i}`, true);
+        // setValue('endCurve_' + `${i}`, true);
+      }
+    }, [roofData]);
 
     useEffect(() => {
       const _roofTypes = RoofTypes.map(r => r.name);
-      console.log('roof types :', _roofTypes);
+      // console.log('roof types :', _roofTypes);
       setRoofTypes(_roofTypes);
     }, [RoofTypes]);
 
@@ -45,35 +44,20 @@ const RoofDataIput = forwardRef(
       setValue('B_' + `${i}`, 0);
       setValue('C_' + `${i}`, 0);
       setValue('pDist_' + `${i}`, 0);
-      setValue('topCover' + `${i}`, false);
-      setValue('endCurve' + `${i}`, false);
+      setValue('topCover_' + `${i}`, false);
+      setValue('endCurve_' + `${i}`, false);
     };
-
-    const handleValueChange = (e, side) => {
-      // e.preventDefault();
-      const _roofValue = { ...roofValue };
-      // side === 'wide'
-      //   ? (_roofValue.wide = value * 1)
-      //   : (_roofValue.long = value * 1);
-      if (side === 'A') _roofValue.A = e.target.value * 1;
-      if (side === 'B') _roofValue.B = e.target.value * 1;
-      if (side === 'C') _roofValue.C = e.target.value * 1;
-      if (side === 'pDist') _roofValue.pDist = e.target.value * 1;
-      if (side === 'topCover') _roofValue.topCover = e;
-      if (side === 'endCurve') _roofValue.endCurve = e;
-      setRoofValue(_roofValue);
-    };
-
     const changeRoofType = e => {
+      console.log(e.target.value);
       const _type = e.target.value;
-      const _roofValue = { ...roofValue };
+      // const _roofValue = { ...roofValue };
       if (_type) {
         let _roofType = R.find(R.propEq('name', _type))(RoofTypes);
         setNeedA(_roofType.needA);
         setNeedB(_roofType.needB);
         setNeedC(_roofType.needC);
-        _roofValue.type = _type;
-        setRoofValue(_roofValue);
+        // _roofValue.type = _type;
+        // setRoofValue(_roofValue);
         setInputInitValue();
       }
     };
@@ -93,11 +77,13 @@ const RoofDataIput = forwardRef(
           <div className="flex flex-col  justify-center items-center">
             <div className="flex flex-row ">
               <div>รูปแบบหลังคา</div>
+
               <Select
-                name={'no' + `${i}`}
-                onChange={e => changeRoofType(e)}
                 options={roofTypes}
+                name={'no_' + `${i}`}
                 register={register}
+                onChange={e => changeRoofType(e)}
+                defaultValue={roofData.type}
               />
             </div>
             <div className="flex ">
@@ -122,9 +108,9 @@ const RoofDataIput = forwardRef(
                             },
                           })
                     }
-                    onChange={e => {
-                      handleValueChange(e, 'A');
-                    }}
+                    // onChange={e => {
+                    //   handleValueChange(e, 'A');
+                    // }}
                   />
                 </div>
 
@@ -145,9 +131,9 @@ const RoofDataIput = forwardRef(
                             },
                           })
                     }
-                    onChange={e => {
-                      handleValueChange(e, 'B');
-                    }}
+                    // onChange={e => {
+                    //   handleValueChange(e, 'B');
+                    // }}
                   />
                 </div>
                 <div className="flex flex-row mt-2 ">
@@ -164,15 +150,14 @@ const RoofDataIput = forwardRef(
                         : register({
                             validate: {
                               positiveNumber: value => {
-                                console.log(value);
                                 parseFloat(value) > 0;
                               },
                             },
                           })
                     }
-                    onChange={e => {
-                      handleValueChange(e, 'C');
-                    }}
+                    // onChange={e => {
+                    //   handleValueChange(e, 'C');
+                    // }}
                   />
                 </div>
               </div>
@@ -189,30 +174,26 @@ const RoofDataIput = forwardRef(
                         positiveNumber: value => parseFloat(value) > 0,
                       },
                     })}
-                    onChange={e => {
-                      handleValueChange(e, 'pDist');
-                    }}
+                    // onChange={e => {
+                    //   handleValueChange(e, 'pDist');
+                    // }}
                   />
                 </div>
                 <div className="flex flex-row mt-3">
                   <div className="w-20">ครอบจั่ว :</div>
                   <Checkbox
-                    name={'topCover' + `${i}`}
-                    onCheck={e => {
-                      handleValueChange(e, 'topCover');
-                    }}
+                    name={'topCover_' + `${i}`}
                     register={register}
+                    value={roofData.data.topCover}
                   />
                 </div>
+
                 <div className=" flex flex-row  mt-3 ">
                   <div className="w-20">ย้ำโค้ง :</div>
-
                   <Checkbox
-                    name={'endCurve' + `${i}`}
-                    onCheck={e => {
-                      handleValueChange(e, 'endCurve');
-                    }}
+                    name={'endCurve_' + `${i}`}
                     register={register}
+                    value={roofData.data.endCurve}
                   />
                 </div>
               </div>
@@ -239,53 +220,102 @@ RoofDataIput.defaultProps = {
   setValue: () => {},
   roofData: {
     no: 1,
-    A: 0,
-    B: 0,
-    C: 0,
-    pDist: 0,
-    topCover: false,
-    endCurve: false,
     type: '',
+    data: {
+      A: 0,
+      B: 0,
+      C: 0,
+      pDist: 0,
+      topCover: false,
+      endCurve: false,
+    },
   },
 };
 
-const CustomerData = ({ setRoofArea, roofs }) => {
-  const [RoofArea, addRoof] = useState([]);
+const CustomerData = ({ setRoofArea, roofDatas }) => {
+  const [RoofAreas, setRoofAreas] = useState([]);
+  const [NewRoofArea, addNewRoof] = useState([]);
   const [RoofValue, setRoofValue] = useState([]);
-  const { register, handleSubmit, setValue, watch, errors } = useForm();
-
-  const handleNext = data => {
-    console.log(RoofValue);
-    console.log('data:', data);
-    //add roof data to redux
-    setRoofArea(RoofValue);
-    //navigate('metalsheet/prequatation');
-  };
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    control,
+    watch,
+    errors,
+  } = useForm();
 
   useEffect(() => {
-    // console.log(roofs);
-    if (roofs.length > 0) {
-      setRoofValue(roofs);
+    if (roofDatas && roofDatas.length > 0) {
+      let _roofs = roofDatas.map((roof, i) => {
+        return (
+          <RoofDataIput
+            i={i + 1}
+            key={i + 1}
+            //valueChange={roofValueChange}
+            roofData={roof}
+            register={register}
+            setValue={setValue}
+            control={control}
+          />
+        );
+      });
+      setRoofAreas(_roofs);
+    } else {
+      let _roofs = (
+        <RoofDataIput
+          i={1}
+          key="1"
+          //valueChange={roofValueChange}
+          register={register}
+          setValue={setValue}
+          control={control}
+        />
+      );
+      setRoofAreas(_roofs);
     }
-  }, [roofs]);
+  }, [roofDatas]);
 
-  const roofValueChange = (i, value) => {
-    const _roofValue = [...RoofValue];
-    let _i = 0;
+  const handleNext = data => {
+    // console.log(RoofValue);
+    console.log('data:', data);
+    let _roofData = [];
+    Object.keys(data).map((keyName, idx) => {
+      if (R.contains('no', keyName)) {
+        //roof no.
+        let _roof = {};
+        let _no = R.split('_', keyName)[1];
+        //roof type
+        let _type = data[keyName];
+        _roof['no'] = _no;
+        _roof['type'] = _type;
+        _roof['data'] = {};
+        // console.log(_no);
+        // console.log(_type);
+        console.log(_roof);
+        Object.keys(data).map((k, i) => {
+          if (R.contains(_no, k) && !R.contains('no', k)) {
+            let _temp = R.split('_', k)[0];
+            let _data = typeof data[k] !== 'boolean' ? data[k] * 1 : data[k];
 
-    const _roofIndex = R.findIndex(R.propEq('no', i))(_roofValue);
-    _roofIndex === -1
-      ? _roofValue.push(value)
-      : (_roofValue[_roofIndex] = value);
+            _roof['data'][_temp] = _data;
+          }
+        });
+        _roofData.push(_roof);
+      }
+    });
+    console.log(_roofData);
 
-    console.log(_roofValue);
-    setRoofValue(_roofValue);
+    //add roof data to redux
+    // setRoofArea(RoofValue);
+    setRoofArea(_roofData);
+    navigate('metalsheet/prequatation');
   };
 
   const addRoofArea = () => {
-    const _area = [...RoofArea];
+    const _area = [...NewRoofArea];
     const _i = _area.length + 2;
-    addRoof(area =>
+    addNewRoof(area =>
       area.concat(
         <RoofDataIput
           i={_i}
@@ -293,17 +323,19 @@ const CustomerData = ({ setRoofArea, roofs }) => {
           //valueChange={roofValueChange}
           register={register}
           setValue={setValue}
+          control={control}
         />
       )
     );
   };
 
   const RoofsDataComponent = () => {
-    // console.log('roof data commpoent');
-    // console.log(roofs);
-    if (roofs && roofs.length > 0) {
-      // console.log(roofs.length);
-      return roofs.map((roof, i) => {
+    console.log('call roof data component');
+    if (roofDatas && roofDatas.length > 0) {
+      console.log('roof data commpoent');
+      console.log(roofDatas);
+      return roofDatas.map((roof, i) => {
+        console.log('add roof component');
         return (
           <RoofDataIput
             i={i + 1}
@@ -346,8 +378,9 @@ const CustomerData = ({ setRoofArea, roofs }) => {
                   Next
                 </Button>
               </div>
-              {RoofsDataComponent()}
-              {RoofArea}
+              {/* {RoofsDataComponent()} */}
+              {RoofAreas}
+              {NewRoofArea}
               <div className="text-red-700 border-red-400 mt-4 py-2 px-4">
                 {Object.keys(errors).length > 0 &&
                   'There are errors, dimensions must be number and great than 0.'}
@@ -369,12 +402,12 @@ const CustomerData = ({ setRoofArea, roofs }) => {
 
 CustomerData.propTypes = {
   setRoofArea: PropTypes.func,
-  roofs: PropTypes.array,
+  roofData: PropTypes.array,
 };
 
 CustomerData.defaultProps = {
   setRoofArea: () => {},
-  roofs: [],
+  roofDatas: [],
 };
 
 const mapDispatchToProps = dispatch => {
@@ -383,6 +416,6 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const mapStateToPProps = state => ({ roofs: state.Customer.roofs });
+const mapStateToPProps = state => ({ roofDatas: state.Customer.roofs });
 
 export default connect(mapStateToPProps, mapDispatchToProps)(CustomerData);
