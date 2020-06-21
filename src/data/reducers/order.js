@@ -41,12 +41,12 @@ const reducers = [
     types.ADD_ORDER,
     (state, action) => {
       console.log('@order/addOrder');
-      return { ...state, seller: action.payload };
+      return { ...state, orders: action.payload };
     },
   ],
   [
     types.REMOVE_ORDER,
-    (state, action) => ({ ...state, seller: action.payload }),
+    (state, action) => ({ ...state, orders: action.payload }),
   ],
 ];
 

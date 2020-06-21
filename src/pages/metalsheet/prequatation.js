@@ -7,7 +7,7 @@ import Layout from 'components/layout';
 import PropTypes, { object } from 'prop-types';
 import { Select, TextInput, AddCartButton, Button } from 'components/common';
 import { ProductGroups } from 'data/mockup-data';
-import { actions } from 'data/reducers/customer';
+import { actions } from 'data/reducers/order';
 
 //Groups need to be loaded from DB, created by admin
 const Groups = R.find(R.propEq('type', 'MetalSheet'))(ProductGroups);
@@ -100,7 +100,7 @@ const RoofProductDetail = forwardRef(
   }
 );
 
-const PreQuatation = ({ roofs, setRoofArea }) => {
+const PreQuatation = ({ roofs, addOrder }) => {
   const [roofsData, setRoofsData] = useState([]);
   const { register, handleSubmit, watch, errors } = useForm();
 
@@ -113,14 +113,69 @@ const PreQuatation = ({ roofs, setRoofArea }) => {
     return 10;
   }
   const addToCartClick = data => {
-    // console.log(' add cart click');
+    console.log(' add cart click');
     console.log(data);
-    // let prodType = Groups.groups;
-    // // console.log(prodType);
-    // let _temp = {};
-    // let _orders = [];
-    // let _roofs = [...roofsData];
-    // let _no = 0;
+    let prodType = Groups.groups;
+    // console.log(prodType);
+    let _tempOrder = {};
+    let _orders = [];
+    let _roofs = [...roofsData];
+    let _no = 0;
+    let _prod = '';
+    let _type = '';
+    // console.log(_roofs);
+
+    R.keys(data).map(key => {
+      _no = parseInt(key.substring(0, key.indexOf('_')));
+      _roofs.map(roof =>
+        parseInt(roof.no) === _no ? (_type = roof.type) : ''
+      );
+      let _temp = { no: _no, type: _type, orderList: [] };
+      if (!R.contains(_temp, _orders)) _orders.push(_temp);
+    });
+
+    R.keys(data).map(_prodKey => {
+      if (R.contains('product', _prodKey)) {
+        _tempOrder = {};
+        let _noProd = parseInt(R.split('_', _prodKey)[0]);
+        let _pGroup = R.split('_', _prodKey)[2];
+
+        _prod = data[_prodKey];
+        // _tempOrders = { no: _no };
+
+        R.keys(data).map(_unitKey => {
+          let _noUnit = parseInt(R.split('_', _unitKey)[0]);
+          if (
+            R.contains('unit', _unitKey) &&
+            R.contains(_pGroup, _unitKey) &&
+            _noProd === _noUnit
+          ) {
+            _tempOrder[_prod] = data[_unitKey];
+          }
+        });
+
+        _orders.map((order, i) => {
+          if (order.no === _noProd) {
+            _orders[i]['orderList'].push(_tempOrder);
+          }
+        });
+        // console.log(_orders);
+      }
+    });
+    addOrder(_orders);
+
+    // R.keys(data).map(_unitKey => {
+    //   if (R.contains('unit', _prodKey)) {
+    //     _no = parseInt(_prodKey.substring(0, _prodKey.indexOf('_')));
+    //     _unit = data[_unitKey];
+
+    //     temp[_prod] = 0;
+
+    //     console.log(_prod);
+    //     console.log(_no);
+    //     console.log(JSON.stringify(temp));
+    //   }
+    // });
 
     // _roofs.map(roof => {
     //   _orders = [];
@@ -156,7 +211,7 @@ const PreQuatation = ({ roofs, setRoofArea }) => {
     //       }
     //     });
     //   });
-    // });
+    //});
     // setRoofArea(_roofs);
   };
 
@@ -184,7 +239,6 @@ const PreQuatation = ({ roofs, setRoofArea }) => {
               <form onSubmit={handleSubmit(addToCartClick)}>
                 <div>
                   {roofsData.map((roof, roof_index) => {
-                    console.log(roof, roof_index);
                     return (
                       <RoofProductDetail
                         roof={roof}
@@ -304,15 +358,15 @@ const PreQuatation = ({ roofs, setRoofArea }) => {
 };
 
 PreQuatation.propTypes = {
-  setRoofArea: PropTypes.func,
+  addOrder: PropTypes.func,
   roofs: PropTypes.array,
 };
 
-PreQuatation.defaultProps = { roofs: [], setRoofArea: () => {} };
+PreQuatation.defaultProps = { roofs: [], addOrder: () => {} };
 
 const mapDispatchToProps = dispatch => {
   return {
-    setRoofArea: areas => dispatch(actions.setRoof(areas)),
+    addOrder: orders => dispatch(actions.addOrder(orders)),
   };
 };
 
