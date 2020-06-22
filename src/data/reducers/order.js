@@ -1,5 +1,6 @@
 import { simpleAction, payloadAction } from './utils/actions';
 import switchReducer from './utils/switchReducer';
+import * as R from 'ramda';
 // import { createStore as reduxCreateStore } from 'redux';
 
 const types = {
@@ -13,35 +14,22 @@ export const actions = {
   // logout: simpleAction(types.LOGOUT),
 };
 
-const initialState = {
-  // orders = [
-  //   {
-  //     group:'metalsheet',
-  //     areas:[{
-  //       no:1, products:[]
-  //     }]
-  //   },
-  //   {
-  //     group:'column',
-  //     products:[]
-  //   },
-  //   {
-  //     group:'concrete',
-  //     areas:[{
-  //       no:1,
-  //       products:[]
-  //     }]
-  //   }
-  // ],
-  orders: [],
-};
+// orders = {
+//    metalsheet : areas:[{ no:1, products:[] }]
+//    column :  areas:[{no:1, products:[] }]
+//    concrete : areas:[{ no:1, products:[] }]
+// }
+
+const initialState = {};
 
 const reducers = [
   [
     types.ADD_ORDER,
     (state, action) => {
-      console.log('@order/addOrder');
-      return { ...state, orders: action.payload };
+      // console.log('@order/addOrder');
+      let _order = { ...state };
+      _order[action.payload.group] = { areas: action.payload.areas };
+      return Object.assign({}, state, _order);
     },
   ],
   [

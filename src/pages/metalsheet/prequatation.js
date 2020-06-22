@@ -10,7 +10,9 @@ import { ProductGroups } from 'data/mockup-data';
 import { actions } from 'data/reducers/order';
 
 //Groups need to be loaded from DB, created by admin
-const Groups = R.find(R.propEq('type', 'MetalSheet'))(ProductGroups);
+const GroupName = 'MetalSheet';
+const Groups = R.find(R.propEq('type', GroupName))(ProductGroups);
+
 const itemTest = { name: 'test' };
 
 const RoofProductDetail = forwardRef(
@@ -130,7 +132,7 @@ const PreQuatation = ({ roofs, addOrder }) => {
       _roofs.map(roof =>
         parseInt(roof.no) === _no ? (_type = roof.type) : ''
       );
-      let _temp = { no: _no, type: _type, orderList: [] };
+      let _temp = { no: _no, type: _type, products: [] };
       if (!R.contains(_temp, _orders)) _orders.push(_temp);
     });
 
@@ -156,13 +158,15 @@ const PreQuatation = ({ roofs, addOrder }) => {
 
         _orders.map((order, i) => {
           if (order.no === _noProd) {
-            _orders[i]['orderList'].push(_tempOrder);
+            _orders[i]['products'].push(_tempOrder);
           }
         });
         // console.log(_orders);
       }
     });
-    addOrder(_orders);
+    let order = { group: GroupName, areas: _orders };
+    addOrder(order);
+    //  navigate('confirmorder');
 
     // R.keys(data).map(_unitKey => {
     //   if (R.contains('unit', _prodKey)) {
