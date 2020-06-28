@@ -16,4 +16,27 @@ const RoofTypes = [
   { name: 'type B', needA: true, needB: true, needC: false },
 ];
 
-export { ProductGroups, RoofTypes };
+const MockOrders = {
+  metalsheet: {
+    areas: [
+      {
+        no: 1,
+        type: 'type A',
+        products: [{ metalsheet: 30 }, { puFoam: 30 }, { screw: 100 }],
+      },
+      {
+        no: 2,
+        type: 'type B',
+        products: [{ metalsheet: 60 }, { puFoam: 50 }, { screw: 2000 }],
+      },
+    ],
+  },
+  concrete: {
+    areas: [
+      { no: 1, products: [{ concrete210: 100 }] },
+      { no: 2, products: [{ concrete190: 200 }] },
+    ],
+  },
+};
+
+export { ProductGroups, RoofTypes, MockOrders };

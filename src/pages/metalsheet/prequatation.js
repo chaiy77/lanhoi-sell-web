@@ -166,7 +166,7 @@ const PreQuatation = ({ roofs, addOrder }) => {
     });
     let order = { group: GroupName, areas: _orders };
     addOrder(order);
-    //  navigate('confirmorder');
+    navigate('confirmorder');
 
     // R.keys(data).map(_unitKey => {
     //   if (R.contains('unit', _prodKey)) {

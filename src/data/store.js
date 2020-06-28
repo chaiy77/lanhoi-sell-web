@@ -5,10 +5,16 @@ import rootReducer from './reducers';
 // import rootSaga from './sagas';
 
 export default function configureStore() {
-  // https://github.com/zalmoxisus/redux-devtools-extension
-  const store = createStore(
-    rootReducer,
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-  );
+  let store = '';
+  if (typeof window !== 'undefined') {
+    // https://github.com/zalmoxisus/redux-devtools-extension
+    store = createStore(
+      rootReducer,
+      window.__REDUX_DEVTOOLS_EXTENSION__ &&
+        window.__REDUX_DEVTOOLS_EXTENSION__()
+    );
+  } else {
+    store = createStore(rootReducer);
+  }
   return store;
 }
