@@ -11,7 +11,7 @@ const IndexPage = () => {
 
   const login = data => {
     console.log('login');
-    navigate('metalsheet/customerdata');
+    navigate('products');
   };
 
   return (

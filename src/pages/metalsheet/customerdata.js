@@ -1,6 +1,6 @@
 import React, { useState, useEffect, forwardRef } from 'react';
 import * as R from 'ramda';
-import PropTypes, { bool } from 'prop-types';
+import PropTypes from 'prop-types';
 import { useForm, Controller } from 'react-hook-form';
 import { Button, Select, Checkbox } from 'components/common';
 import Layout from 'components/layout';
@@ -33,6 +33,7 @@ const RoofDataIput = forwardRef(
       }
     }, [roofData]);
 
+    //set rooftype for select
     useEffect(() => {
       const _roofTypes = RoofTypes.map(r => r.name);
       // console.log('roof types :', _roofTypes);
@@ -77,17 +78,18 @@ const RoofDataIput = forwardRef(
           <div className="flex flex-col  justify-center items-center">
             <div className="flex flex-row ">
               <div>รูปแบบหลังคา</div>
-
-              <Select
-                options={roofTypes}
-                name={'no_' + `${i}`}
-                register={register}
-                onChange={e => changeRoofType(e)}
-                defaultValue={roofData.type}
-              />
+              <div className="flex px-5">
+                <Select
+                  options={roofTypes}
+                  name={'no_' + `${i}`}
+                  register={register}
+                  onChange={e => changeRoofType(e)}
+                  defaultValue={roofData.type}
+                />
+              </div>
             </div>
-            <div className="flex ">
-              <img src={lanhoi} />
+            <div className="flex border w-2/5  my-5">
+              <img src={lanhoi} className="w-full h-full" />
             </div>
             <div className="flex flex-row flex-wrap  ">
               <div className="flex flex-col  sm:w-full md:w-1/2 xl:w-1/2 ">
@@ -329,36 +331,36 @@ const CustomerData = ({ setRoofArea, roofDatas }) => {
     );
   };
 
-  const RoofsDataComponent = () => {
-    console.log('call roof data component');
-    if (roofDatas && roofDatas.length > 0) {
-      console.log('roof data commpoent');
-      console.log(roofDatas);
-      return roofDatas.map((roof, i) => {
-        console.log('add roof component');
-        return (
-          <RoofDataIput
-            i={i + 1}
-            key={i + 1}
-            //valueChange={roofValueChange}
-            roofData={roof}
-            register={register}
-            setValue={setValue}
-          />
-        );
-      });
-    } else {
-      return (
-        <RoofDataIput
-          i={1}
-          key="1"
-          //valueChange={roofValueChange}
-          register={register}
-          setValue={setValue}
-        />
-      );
-    }
-  };
+  // const RoofsDataComponent = () => {
+  //   console.log('call roof data component');
+  //   if (roofDatas && roofDatas.length > 0) {
+  //     console.log('roof data commpoent');
+  //     console.log(roofDatas);
+  //     return roofDatas.map((roof, i) => {
+  //       console.log('add roof component');
+  //       return (
+  //         <RoofDataIput
+  //           i={i + 1}
+  //           key={i + 1}
+  //           //valueChange={roofValueChange}
+  //           roofData={roof}
+  //           register={register}
+  //           setValue={setValue}
+  //         />
+  //       );
+  //     });
+  //   } else {
+  //     return (
+  //       <RoofDataIput
+  //         i={1}
+  //         key="1"
+  //         //valueChange={roofValueChange}
+  //         register={register}
+  //         setValue={setValue}
+  //       />
+  //     );
+  //   }
+  // };
 
   return (
     <Layout
@@ -370,15 +372,10 @@ const CustomerData = ({ setRoofArea, roofDatas }) => {
                 <div className="text-gray-700 text-sm font-bold ">
                   CustomerData
                 </div>
-                <Button
-                  // to="/metalsheet/prequatation"
-                  type="submit"
-                  label="Next"
-                >
-                  Next
-                </Button>
+                <div className="flex w-auto">
+                  <Button type="submit" label="Next" />
+                </div>
               </div>
-              {/* {RoofsDataComponent()} */}
               {RoofAreas}
               {NewRoofArea}
               <div className="text-red-700 border-red-400 mt-4 py-2 px-4">
@@ -386,13 +383,9 @@ const CustomerData = ({ setRoofArea, roofDatas }) => {
                   'There are errors, dimensions must be number and great than 0.'}
               </div>
             </form>
-
-            <button
-              className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-5"
-              onClick={() => addRoofArea()}
-            >
-              Add Roof Area
-            </button>
+            <div className="flex w-full mx-5">
+              <Button onClick={() => addRoofArea()} label="Add Roof" />
+            </div>
           </div>
         );
       }}
@@ -416,6 +409,6 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const mapStateToPProps = state => ({ roofDatas: state.Customer.roofs });
+const mapStateToProps = state => ({ roofDatas: state.Customer.roofs });
 
-export default connect(mapStateToPProps, mapDispatchToProps)(CustomerData);
+export default connect(mapStateToProps, mapDispatchToProps)(CustomerData);

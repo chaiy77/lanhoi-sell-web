@@ -19,7 +19,7 @@ const ConfirmTable = ({ columns, data }) => {
 
   return (
     <div>
-      <table {...getTableProps()}>
+      <table {...getTableProps()} className="w-full">
         <thead>
           <tr className="bg-green-400">
             {headers.map(column => (

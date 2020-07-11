@@ -5,21 +5,21 @@ import switchReducer from './utils/switchReducer';
 const types = {
   SET_CUSTOMER: '@customer/setCustomer',
   SET_ROOF: '@customer/setRoof',
-  SET_COLUMN: '@customer/setColumn',
-  SET_FLOOR: '@customer/setFloor',
+  SET_PILE: '@customer/setPile',
+  SET_SLAB: '@customer/setSlab',
   SET_CONCRETE: '@customer/setConcrete',
   SET_FENCE: '@customer/setFence',
-  SET_GROUNDWALL: '@customer/setGroudWall',
+  SET_WALL: '@customer/setWall',
 };
 
 export const actions = {
   setCustomer: customer => payloadAction(types.SET_CUSTOMER)(customer),
   setRoof: roofAreas => payloadAction(types.SET_ROOF)(roofAreas),
-  setColumn: columns => payloadAction(types.SET_COLUMN)(columns),
+  setPile: piles => payloadAction(types.SET_PILE)(piles),
   setConcrete: areas => payloadAction(types.SET_CONCRETE)(areas),
-  setFence: areas => payloadAction(types.SET_FENCE)(areas),
-  setFloor: areas => payloadAction(types.SET_FLOOR)(areas),
-  setGroudWall: areas => payloadAction(types.SET_GROUNDWALL)(areas),
+  setFence: fence => payloadAction(types.SET_FENCE)(fence),
+  setSlab: slabs => payloadAction(types.SET_SLAB)(slabs),
+  setWall: walls => payloadAction(types.SET_WALL)(walls),
 
   // logout: simpleAction(types.LOGOUT),
 };
@@ -47,20 +47,14 @@ const reducers = [
   // [types.AUTO_LOGIN_FAILURE, state => ({ ...state, user: null })],
   [types.SET_CUSTOMER, (state, action) => ({ ...state, data: action.payload })],
   [types.SET_ROOF, (state, action) => ({ ...state, roofs: action.payload })],
-  [
-    types.SET_COLUMN,
-    (state, action) => ({ ...state, columns: action.payload }),
-  ],
+  [types.SET_PILE, (state, action) => ({ ...state, plies: action.payload })],
   [
     types.SET_CONCRETE,
     (state, action) => ({ ...state, concrete: action.payload }),
   ],
   [types.SET_FENCE, (state, action) => ({ ...state, fences: action.payload })],
-  [types.SET_FLOOR, (state, action) => ({ ...state, floor: action.payload })],
-  [
-    types.SET_GROUNDWALL,
-    (state, action) => ({ ...state, groundWall: action.payload }),
-  ],
+  [types.SET_SLAB, (state, action) => ({ ...state, slabs: action.payload })],
+  [types.SET_WALL, (state, action) => ({ ...state, Wall: action.payload })],
 ];
 
 const customerReducers = switchReducer(reducers, initialState);

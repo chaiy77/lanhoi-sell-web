@@ -3,14 +3,7 @@ import PropTypes from 'prop-types';
 
 //import Logo from 'images/sukhothai-zeroCovid-logo.png';
 
-const ComponentText = {
-  HOME_MENU: 'สถานการณ์',
-  HOSPITAL_MENU: 'โรงพยาบาล',
-  DOATE_MENU: 'บริจาค',
-  MARKETPLACE_MENU: 'ร้านค้า',
-};
-
-const background = '#fff8f5';
+const background = '#9AE6B4';
 
 const MenuItem = ({ title, href }) => {
   return (

@@ -7,8 +7,10 @@ const ProductGroups = [
     image: metalsheetDemo,
   },
   { type: 'Concrete', groups: ['Concrete'], image: metalsheetDemo },
-  { type: 'Column', groups: ['I-Column'], image: metalsheetDemo },
-  { type: 'Floor Sheet', groups: ['Concrete'], image: metalsheetDemo },
+  { type: 'Pile', groups: ['I-Column'], image: metalsheetDemo },
+  { type: 'Slab', groups: ['Concrete Slab'], image: metalsheetDemo },
+  { type: 'Fence', groups: ['Concrete Fence'], image: metalsheetDemo },
+  { type: 'RetainingWall', groups: ['Retaining Wall'], image: metalsheetDemo },
 ];
 
 const RoofTypes = [
