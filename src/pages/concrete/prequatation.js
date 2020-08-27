@@ -1,12 +1,12 @@
 import React, { forwardRef, useState, useEffect } from 'react';
-import { Link, navigate } from 'gatsby';
+import { navigate } from 'gatsby';
 import { connect } from 'react-redux';
 import { actions } from 'data/reducers/order';
 import { useForm } from 'react-hook-form';
 import * as R from 'ramda';
 import Layout from 'components/layout';
-import PropTypes, { object } from 'prop-types';
-import { Select, TextInput, AddCartButton, Button } from 'components/common';
+import PropTypes from 'prop-types';
+import { Select, TextInput, Button } from 'components/common';
 import { ProductGroups } from 'data/mockup-data';
 
 //Groups need to be loaded from DB, created by admin
@@ -88,54 +88,55 @@ const ConcretePreQuatation = ({ areas, addOrder }) => {
   }
   const addToCartClick = data => {
     console.log(' add cart click');
-    //   // console.log(data);
-    //   let prodType = Groups.groups;
-    //   let _tempOrder = {};
-    //   let _orders = [];
-    //   let _areas = [...areaData];
-    //   let _no = 0;
-    //   let _prod = '';
-    //   let _type = '';
+    console.log(data);
+    let prodType = Groups.groups;
+    let _tempOrder = {};
+    let _orders = [];
+    let _areas = [...areaData];
+    let _no = 0;
+    let _prod = '';
+    let _type = '';
 
-    //   R.keys(data).map(key => {
-    //     _no = parseInt(key.substring(0, key.indexOf('_')));
-    //     _roofs.map(roof =>
-    //       parseInt(roof.no) === _no ? (_type = roof.type) : ''
-    //     );
-    //     let _temp = { no: _no, type: _type, products: [] };
-    //     if (!R.contains(_temp, _orders)) _orders.push(_temp);
-    //   });
+    R.keys(data).map(key => {
+      _no = parseInt(key.substring(0, key.indexOf('_')));
+      _areas.map(area =>
+        parseInt(area.no) === _no ? (_type = area.type) : ''
+      );
+      let _temp = { no: _no, type: _type, products: [] };
+      if (!R.contains(_temp, _orders)) _orders.push(_temp);
+    });
 
-    //   R.keys(data).map(_prodKey => {
-    //     if (R.contains('product', _prodKey)) {
-    //       _tempOrder = {};
-    //       let _noProd = parseInt(R.split('_', _prodKey)[0]);
-    //       let _pGroup = R.split('_', _prodKey)[2];
+    R.keys(data).map(_prodKey => {
+      if (R.contains('product', _prodKey)) {
+        _tempOrder = {};
+        let _noProd = parseInt(R.split('_', _prodKey)[0]);
+        let _pGroup = R.split('_', _prodKey)[2];
 
-    //       _prod = data[_prodKey];
+        _prod = data[_prodKey];
 
-    //       R.keys(data).map(_unitKey => {
-    //         let _noUnit = parseInt(R.split('_', _unitKey)[0]);
-    //         if (
-    //           R.contains('unit', _unitKey) &&
-    //           R.contains(_pGroup, _unitKey) &&
-    //           _noProd === _noUnit
-    //         ) {
-    //           _tempOrder[_prod] = data[_unitKey];
-    //         }
-    //       });
+        R.keys(data).map(_unitKey => {
+          let _noUnit = parseInt(R.split('_', _unitKey)[0]);
+          if (
+            R.contains('unit', _unitKey) &&
+            R.contains(_pGroup, _unitKey) &&
+            _noProd === _noUnit
+          ) {
+            _tempOrder[_prod] = data[_unitKey];
+          }
+        });
 
-    //       _orders.map((order, i) => {
-    //         if (order.no === _noProd) {
-    //           _orders[i]['products'].push(_tempOrder);
-    //         }
-    //       });
-    //       // console.log(_orders);
-    //     }
-    //   });
-    //   let order = { group: GroupName, areas: _orders };
-    //   addOrder(order);
-    //   navigate('confirmorder');
+        _orders.map((order, i) => {
+          if (order.no === _noProd) {
+            _orders[i]['products'].push(_tempOrder);
+          }
+        });
+        // console.log(_orders);
+      }
+    });
+    let order = { group: GroupName, areas: _orders };
+    console.log(order);
+    addOrder(order);
+    navigate('confirmorder');
   };
 
   return (

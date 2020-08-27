@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { actions } from 'data/reducers/customer';
 import { useForm, Controller } from 'react-hook-form';
 import { Button, Select, Checkbox } from 'components/common';
+import { navigate } from 'gatsby';
 
 const WallDataInput = forwardRef(
   ({ i, register, wallsData, setValue }, ref) => {
@@ -158,7 +159,8 @@ const WallDataComponent = ({ wallData, setWallData }) => {
       }
     });
     console.log(_wallData);
-    setWallData(_areaData);
+    setWallData(_wallData);
+    navigate('retainingwall/prequatation');
   };
 
   return (

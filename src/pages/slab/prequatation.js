@@ -10,47 +10,26 @@ import { ProductGroups } from 'data/mockup-data';
 import { actions } from 'data/reducers/order';
 
 //Groups need to be loaded from DB, created by admin
-const GroupName = 'เมทัลชีท';
+const GroupName = 'Slab';
 const Groups = R.find(R.propEq('type', GroupName))(ProductGroups);
 
-const RoofProductDetail = forwardRef(
-  ({ roof, roof_index, register, errors }, ref) => {
+const SlabProductDetail = forwardRef(
+  ({ slab, slab_index, register, errors }, ref) => {
     return (
-      <div key={roof_index}>
+      <div key={slab_index}>
         <div className="flex  border border-gray-500 bg-blue-400 p-2 rounded-t-md">
           <div className="flex flex-col">
             <div className="flex flex-row">
-              <div className="mx-2 text-2xl font-bold">Area No. {roof.no} </div>
-              <div className="mx-3 text-2xl font-bold">{roof.type}</div>
+              <div className="mx-2 text-2xl font-bold">Area No. {slab.no} </div>
             </div>
             <div className="flex flex-row">
-              {roof.data.A ? (
-                <div className="mx-3"> A = {roof.data.A} m.</div>
+              {slab.data.A ? (
+                <div className="mx-3"> A = {slab.data.A} m.</div>
               ) : (
                 <div></div>
               )}
-              {roof.data.B ? (
-                <div className="mx-3"> B = {roof.data.B} m.</div>
-              ) : (
-                <div></div>
-              )}
-              {roof.data.C ? (
-                <div className="mx-3"> C = {roof.data.C} m.</div>
-              ) : (
-                <div></div>
-              )}
-              {roof.data.pDist ? (
-                <div className="mx-3"> ระยะแป = {roof.data.pDist} m.</div>
-              ) : (
-                <div></div>
-              )}
-              {roof.data.topCover ? (
-                <div className="mx-3"> ครอบจั่ว </div>
-              ) : (
-                <div></div>
-              )}
-              {roof.data.endCurve ? (
-                <div className="mx-3"> ย้ำโค้ง </div>
+              {slab.data.B ? (
+                <div className="mx-3"> B = {slab.data.B} m.</div>
               ) : (
                 <div></div>
               )}
@@ -64,18 +43,18 @@ const RoofProductDetail = forwardRef(
                 <div className="w-1/6"> {group} </div>
                 <div className="w-3/6 mx-3 ">
                   <Select
-                    name={`${roof.no}` + '_product_' + `${group}`}
+                    name={`${slab.no}` + '_product_' + `${group}`}
                     register={register}
                   />
                 </div>
                 <div className=" w-1/6 mx-3">
                   <TextInput
-                    name={`${roof.no}` + '_unit_' + `${group}`}
+                    name={`${slab.no}` + '_unit_' + `${group}`}
                     register={register}
                     defaultValue={() => SheetCalculation()}
                   />
                 </div>
-                <div className="w-1/6"> units</div>
+                <div className="w-1/6"> แผ่น</div>
               </div>
             );
           })}
@@ -89,13 +68,13 @@ const RoofProductDetail = forwardRef(
   }
 );
 
-const PreQuatation = ({ roofs, addOrder }) => {
-  const [roofsData, setRoofsData] = useState([]);
+const PreQuatation = ({ slabs, addOrder }) => {
+  const [slabsData, setSlabsData] = useState([]);
   const { register, handleSubmit, watch, errors } = useForm();
 
   useEffect(() => {
-    setRoofsData(roofs);
-  }, [roofs]);
+    setSlabsData(slabs);
+  }, [slabs]);
 
   function SheetCalculation() {
     // console.log('shhet calculation');
@@ -107,17 +86,17 @@ const PreQuatation = ({ roofs, addOrder }) => {
     let prodType = Groups.groups;
     let _tempOrder = {};
     let _orders = [];
-    let _roofs = [...roofsData];
+    let _slabs = [...slabsData];
     let _no = 0;
     let _prod = '';
     let _type = '';
 
     R.keys(data).map(key => {
       _no = parseInt(key.substring(0, key.indexOf('_')));
-      _roofs.map(roof =>
-        parseInt(roof.no) === _no ? (_type = roof.type) : ''
+      _slabs.map(slab =>
+        parseInt(slab.no) === _no ? (_type = slab.type) : ''
       );
-      let _temp = { no: _no, type: _type, products: [] };
+      let _temp = { no: _no, type: _type ? _type : '', products: [] };
       if (!R.contains(_temp, _orders)) _orders.push(_temp);
     });
 
@@ -149,6 +128,7 @@ const PreQuatation = ({ roofs, addOrder }) => {
       }
     });
     let order = { group: GroupName, areas: _orders };
+    console.log(order);
     addOrder(order);
     navigate('confirmorder');
   };
@@ -166,7 +146,7 @@ const PreQuatation = ({ roofs, addOrder }) => {
                   label="Back"
                 />
               </div>
-              <div className="flex items-center text-3xl">Metalsheet</div>
+              <div className="flex items-center text-3xl">แผ่นพื้นคอนกรีต</div>
               <div className="flex w-auto">
                 <Button type="button" label="Next" />
               </div>
@@ -174,11 +154,11 @@ const PreQuatation = ({ roofs, addOrder }) => {
             <div className="mt-3">
               <form onSubmit={handleSubmit(addToCartClick)}>
                 <div>
-                  {roofsData.map((roof, roof_index) => {
+                  {slabsData.map((slab, slab_index) => {
                     return (
-                      <RoofProductDetail
-                        roof={roof}
-                        roof_index={roof_index}
+                      <SlabProductDetail
+                        slab={slab}
+                        slab_index={slab_index}
                         register={register}
                         errors={errors}
                       />
@@ -200,10 +180,10 @@ const PreQuatation = ({ roofs, addOrder }) => {
 
 PreQuatation.propTypes = {
   addOrder: PropTypes.func,
-  roofs: PropTypes.array,
+  slabs: PropTypes.array,
 };
 
-PreQuatation.defaultProps = { roofs: [], addOrder: () => {} };
+PreQuatation.defaultProps = { slabs: [], addOrder: () => {} };
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -211,6 +191,6 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const mapStateToProps = state => ({ roofs: state.Customer.roofs });
+const mapStateToProps = state => ({ slabs: state.Customer.slabs });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PreQuatation);

@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { actions } from 'data/reducers/customer';
 import { useForm, Controller } from 'react-hook-form';
 import { Button, Select, Checkbox } from 'components/common';
+import { navigate } from 'gatsby';
 
 const AreaDataInput = forwardRef(
   ({ i, valueChange, register, areaData, setValue }, ref) => {
@@ -183,6 +184,7 @@ const SlabDataComponent = ({ areaData, setSlabData }) => {
     });
     // console.log(_areaData);
     setSlabData(_areaData);
+    navigate('slab/prequatation');
   };
   return (
     <Layout

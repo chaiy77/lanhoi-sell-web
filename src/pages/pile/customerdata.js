@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { actions } from 'data/reducers/customer';
 import { useForm, Controller } from 'react-hook-form';
 import { Button, Select, Checkbox } from 'components/common';
+import { navigate } from 'gatsby';
 
 const PileDataInput = forwardRef(
   ({ i, register, pilesData, setValue }, ref) => {
@@ -88,11 +89,12 @@ const PileDataComponent = ({ pileData, setPileData }) => {
   const [Piles, setPiles] = useState([]);
 
   useEffect(() => {
+    console.log('pile data :', pileData);
     if (pileData && pileData.length > 0) {
       const _piles = pileData.map((pile, i) => {
         return (
           <PileDataInput
-            no={i + 1}
+            i={i + 1}
             key={i + 1}
             register={register}
             pilesData={pile}
@@ -105,7 +107,7 @@ const PileDataComponent = ({ pileData, setPileData }) => {
     } else {
       const _pile = (
         <PileDataInput
-          no="1"
+          i="1"
           key="1"
           register={register}
           setValue={setValue}
@@ -158,6 +160,7 @@ const PileDataComponent = ({ pileData, setPileData }) => {
     });
     console.log(_pileData);
     setPileData(_pileData);
+    navigate('pile/prequatation');
   };
 
   return (

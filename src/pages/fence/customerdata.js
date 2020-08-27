@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { actions } from 'data/reducers/customer';
 import { useForm, Controller } from 'react-hook-form';
 import { Button, Select, Checkbox } from 'components/common';
+import { navigate } from 'gatsby';
 
 const FenceDataInput = forwardRef(
   ({ i, register, fencesData, setValue }, ref) => {
@@ -160,6 +161,7 @@ const FenceDataComponent = ({ fenceData, setFenceData }) => {
     });
     console.log(_fenceData);
     setFenceData(_fenceData);
+    navigate('fence/prequatation');
   };
 
   return (

@@ -74,7 +74,7 @@ const ConfirmTable = ({ columns, data }) => {
                   }
 
                   if (row.original.type === 'summary') {
-                    console.log(cell.column.id, cell.column.id === 'total');
+                    // console.log(cell.column.id, cell.column.id === 'total');
                     if (_isRenderSum) {
                       _isRenderSum = false;
                       return (

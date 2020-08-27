@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import * as R from 'ramda';
-import { Link } from 'gatsby';
+import { Link, navigate } from 'gatsby';
 import { connect } from 'react-redux';
 import Layout from '../components/layout';
 import { ConfirmTable, ConfirmReactTable, Button } from 'components/common';
@@ -36,47 +36,51 @@ const columns = [
 //   { no: '', product: 'test 1' },
 //   { no: 1, product: 'test 2' },
 // ];
-const mOrder = () => {
-  const _mOrder = MockOrders;
+const mOrder = orders => {
+  // const _mOrder = MockOrders;
+  const _mOrder = orders;
   console.log(_mOrder);
   const _data = [];
   let _idx = 0;
   R.keys(_mOrder).map(group => {
     //Add Product group to table's data
-    _mOrder[group]['areas'].map(area => {
-      area.type
-        ? _data.push({
-            no: '',
-            product:
-              `${group}` + ' : No ' + `${area.no}` + ' ' + `${area.type}`,
-            type: 'group',
-          })
-        : _data.push({
-            no: '',
-            product: `${group}` + ' : No ' + `${area.no}`,
-            type: 'group',
-          });
-      // console.log(R.mergeAll(area.products));
-      let _products = R.mergeAll(area.products);
 
-      //Set Produt 's datas to Table
-      R.keys(_products).map(prodName => {
-        _idx = _idx + 1;
-        // console.log(prodName, ':', _products[prodName]);
-        _data.push({
-          no: _idx,
-          product: prodName,
-          amount: _products[prodName],
-          type: 'product',
+    if (R.has('areas', _mOrder[group])) {
+      _mOrder[group]['areas'].map(area => {
+        area.type
+          ? _data.push({
+              no: '',
+              product:
+                `${group}` + ' : No ' + `${area.no}` + ' ' + `${area.type}`,
+              type: 'group',
+            })
+          : _data.push({
+              no: '',
+              product: `${group}` + ' : No ' + `${area.no}`,
+              type: 'group',
+            });
+        // console.log(R.mergeAll(area.products));
+        let _products = R.mergeAll(area.products);
+
+        //Set Product 's datas to Table
+        R.keys(_products).map(prodName => {
+          _idx = _idx + 1;
+          // console.log(prodName, ':', _products[prodName]);
+          _data.push({
+            no: _idx,
+            product: prodName,
+            amount: _products[prodName],
+            type: 'product',
+          });
         });
       });
-    });
+    }
   });
   //Add Summary to Table
   let _summary = { no: _idx + 1, total: 1230, type: 'summary' };
   _data.push(_summary);
 
-  console.log(_data);
+  // console.log(_data);
   return _data;
 };
 
@@ -84,7 +88,7 @@ const ConfirmOrderPage = ({ orders }) => {
   const [orderData, setOrderData] = useState([]);
   useEffect(() => {
     console.log('order list :', { orders });
-    setOrderData(mOrder());
+    setOrderData(mOrder(orders));
   }, [orders]);
 
   return (
@@ -99,7 +103,10 @@ const ConfirmOrderPage = ({ orders }) => {
             </div>
             <div className="flex flex-row mt-5 justify-between">
               <div className="w-1/4">
-                <Button label="Choose More"></Button>
+                <Button
+                  label="Choose More"
+                  onClick={() => navigate('/products')}
+                ></Button>
               </div>
               <div className="w-1/4">
                 <Button label="Next"></Button>

@@ -47,14 +47,14 @@ const reducers = [
   // [types.AUTO_LOGIN_FAILURE, state => ({ ...state, user: null })],
   [types.SET_CUSTOMER, (state, action) => ({ ...state, data: action.payload })],
   [types.SET_ROOF, (state, action) => ({ ...state, roofs: action.payload })],
-  [types.SET_PILE, (state, action) => ({ ...state, plies: action.payload })],
+  [types.SET_PILE, (state, action) => ({ ...state, piles: action.payload })],
   [
     types.SET_CONCRETE,
     (state, action) => ({ ...state, concrete: action.payload }),
   ],
   [types.SET_FENCE, (state, action) => ({ ...state, fences: action.payload })],
   [types.SET_SLAB, (state, action) => ({ ...state, slabs: action.payload })],
-  [types.SET_WALL, (state, action) => ({ ...state, Wall: action.payload })],
+  [types.SET_WALL, (state, action) => ({ ...state, walls: action.payload })],
 ];
 
 const customerReducers = switchReducer(reducers, initialState);

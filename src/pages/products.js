@@ -36,7 +36,7 @@ const GroupListPage = () => {
         return (
           <div className="flex flex-wrap  sm:w-full md:w-5/6 xl:w-1/2">
             {productGroups.map(group => {
-              return <GroupImage image={group.image} title={group.type} />;
+              return <GroupImage image={group.image} title={group.path} />;
             })}
           </div>
         );

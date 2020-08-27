@@ -1,81 +1,49 @@
 import React, { forwardRef, useState, useEffect } from 'react';
-import { Link, navigate } from 'gatsby';
+import { navigate } from 'gatsby';
 import { connect } from 'react-redux';
+import { actions } from 'data/reducers/order';
 import { useForm } from 'react-hook-form';
 import * as R from 'ramda';
 import Layout from 'components/layout';
-import PropTypes, { object } from 'prop-types';
-import { Select, TextInput, AddCartButton, Button } from 'components/common';
+import PropTypes from 'prop-types';
+import { Select, TextInput, Button } from 'components/common';
 import { ProductGroups } from 'data/mockup-data';
-import { actions } from 'data/reducers/order';
 
 //Groups need to be loaded from DB, created by admin
-const GroupName = 'เมทัลชีท';
+const GroupName = 'รั้วคอนกรีต';
 const Groups = R.find(R.propEq('type', GroupName))(ProductGroups);
 
-const RoofProductDetail = forwardRef(
-  ({ roof, roof_index, register, errors }, ref) => {
+const WallProductDetail = forwardRef(
+  ({ area, area_index, register, errors }, ref) => {
     return (
-      <div key={roof_index}>
+      <div key={area_index}>
         <div className="flex  border border-gray-500 bg-blue-400 p-2 rounded-t-md">
           <div className="flex flex-col">
             <div className="flex flex-row">
-              <div className="mx-2 text-2xl font-bold">Area No. {roof.no} </div>
-              <div className="mx-3 text-2xl font-bold">{roof.type}</div>
-            </div>
-            <div className="flex flex-row">
-              {roof.data.A ? (
-                <div className="mx-3"> A = {roof.data.A} m.</div>
-              ) : (
-                <div></div>
-              )}
-              {roof.data.B ? (
-                <div className="mx-3"> B = {roof.data.B} m.</div>
-              ) : (
-                <div></div>
-              )}
-              {roof.data.C ? (
-                <div className="mx-3"> C = {roof.data.C} m.</div>
-              ) : (
-                <div></div>
-              )}
-              {roof.data.pDist ? (
-                <div className="mx-3"> ระยะแป = {roof.data.pDist} m.</div>
-              ) : (
-                <div></div>
-              )}
-              {roof.data.topCover ? (
-                <div className="mx-3"> ครอบจั่ว </div>
-              ) : (
-                <div></div>
-              )}
-              {roof.data.endCurve ? (
-                <div className="mx-3"> ย้ำโค้ง </div>
-              ) : (
-                <div></div>
-              )}
+              <div className="mx-2 text-2xl font-bold">Area No. {area.no} </div>
             </div>
           </div>
         </div>
         <div className="border border-gray-500  rounded-b-md">
           {Groups.groups.map((group, i) => {
+            console.log(area.data.A);
             return (
               <div className="flex flex-row my-2 py-2 px-4 " key={i}>
-                <div className="w-1/6"> {group} </div>
+                <div className="w-1/6"> เสาเข็ม </div>
                 <div className="w-3/6 mx-3 ">
                   <Select
-                    name={`${roof.no}` + '_product_' + `${group}`}
+                    name={`${area.no}` + '_product_' + `${group}`}
                     register={register}
                   />
                 </div>
                 <div className=" w-1/6 mx-3">
                   <TextInput
-                    name={`${roof.no}` + '_unit_' + `${group}`}
+                    name={`${area.no}` + '_unit_' + `${group}`}
                     register={register}
-                    defaultValue={() => SheetCalculation()}
+                    defaultValue={`${area.data.A}`}
                   />
                 </div>
-                <div className="w-1/6"> units</div>
+                <div className="w-1/6"> ต้น</div>
               </div>
             );
           })}
@@ -89,35 +57,36 @@ const RoofProductDetail = forwardRef(
   }
 );
 
-const PreQuatation = ({ roofs, addOrder }) => {
-  const [roofsData, setRoofsData] = useState([]);
+const WallPreQuatation = ({ areas, addOrder }) => {
+  const [areaData, setRoofsData] = useState([]);
   const { register, handleSubmit, watch, errors } = useForm();
 
   useEffect(() => {
-    setRoofsData(roofs);
-  }, [roofs]);
+    console.log(areas);
+    setRoofsData(areas);
+  }, [areas]);
 
   function SheetCalculation() {
     // console.log('shhet calculation');
     return 10;
   }
   const addToCartClick = data => {
-    // console.log(' add cart click');
-    // console.log(data);
+    console.log(' add cart click');
+    console.log(data);
     let prodType = Groups.groups;
     let _tempOrder = {};
     let _orders = [];
-    let _roofs = [...roofsData];
+    let _areas = [...areaData];
     let _no = 0;
     let _prod = '';
     let _type = '';
 
     R.keys(data).map(key => {
       _no = parseInt(key.substring(0, key.indexOf('_')));
-      _roofs.map(roof =>
-        parseInt(roof.no) === _no ? (_type = roof.type) : ''
+      _areas.map(area =>
+        parseInt(area.no) === _no ? (_type = area.type) : ''
       );
-      let _temp = { no: _no, type: _type, products: [] };
+      let _temp = { no: _no, type: _type ? _type : '', products: [] };
       if (!R.contains(_temp, _orders)) _orders.push(_temp);
     });
 
@@ -149,6 +118,7 @@ const PreQuatation = ({ roofs, addOrder }) => {
       }
     });
     let order = { group: GroupName, areas: _orders };
+    // console.log(order);
     addOrder(order);
     navigate('confirmorder');
   };
@@ -161,12 +131,12 @@ const PreQuatation = ({ roofs, addOrder }) => {
             <div className="flex flex-row justify-between">
               <div>
                 <Button
-                  onClick={() => navigate('/metalsheet/customerdata')}
+                  onClick={() => navigate('/retainingwall/customerdata')}
                   type="button"
                   label="Back"
                 />
               </div>
-              <div className="flex items-center text-3xl">Metalsheet</div>
+              <div className="flex items-center text-3xl">รั้วกันดิน</div>
               <div className="flex w-auto">
                 <Button type="button" label="Next" />
               </div>
@@ -174,11 +144,11 @@ const PreQuatation = ({ roofs, addOrder }) => {
             <div className="mt-3">
               <form onSubmit={handleSubmit(addToCartClick)}>
                 <div>
-                  {roofsData.map((roof, roof_index) => {
+                  {areaData.map((area, area_index) => {
                     return (
-                      <RoofProductDetail
-                        roof={roof}
-                        roof_index={roof_index}
+                      <WallProductDetail
+                        area={area}
+                        area_index={area_index}
                         register={register}
                         errors={errors}
                       />
@@ -198,12 +168,12 @@ const PreQuatation = ({ roofs, addOrder }) => {
   );
 };
 
-PreQuatation.propTypes = {
+WallPreQuatation.propTypes = {
   addOrder: PropTypes.func,
-  roofs: PropTypes.array,
+  areas: PropTypes.array,
 };
 
-PreQuatation.defaultProps = { roofs: [], addOrder: () => {} };
+WallPreQuatation.defaultProps = { areas: [], addOrder: () => {} };
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -211,6 +181,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const mapStateToProps = state => ({ roofs: state.Customer.roofs });
+const mapStateToProps = state => ({ areas: state.Customer.walls });
 
-export default connect(mapStateToProps, mapDispatchToProps)(PreQuatation);
+export default connect(mapStateToProps, mapDispatchToProps)(WallPreQuatation);
+// export default ConcretePreQuatation;

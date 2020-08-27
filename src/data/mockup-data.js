@@ -2,15 +2,41 @@ import metalsheetDemo from 'images/metalsheetDemo.jpg';
 
 const ProductGroups = [
   {
-    type: 'MetalSheet',
-    groups: ['MetalSheet', 'Screw', 'PU-Form'],
+    type: 'เมทัลชีท',
+    path: 'metalsheet',
+    groups: ['แผ่นเมทัลชีท', 'สกรู', 'พียู-โฟม'],
     image: metalsheetDemo,
   },
-  { type: 'Concrete', groups: ['Concrete'], image: metalsheetDemo },
-  { type: 'Pile', groups: ['I-Column'], image: metalsheetDemo },
-  { type: 'Slab', groups: ['Concrete Slab'], image: metalsheetDemo },
-  { type: 'Fence', groups: ['Concrete Fence'], image: metalsheetDemo },
-  { type: 'RetainingWall', groups: ['Retaining Wall'], image: metalsheetDemo },
+  {
+    type: 'Concrete',
+    path: 'concrete',
+    groups: ['คอนกรีต'],
+    image: metalsheetDemo,
+  },
+  {
+    type: 'Pile',
+    path: 'pile',
+    groups: ['เสาเข็มคอนกรีต'],
+    image: metalsheetDemo,
+  },
+  {
+    type: 'Slab',
+    path: 'slab',
+    groups: ['แผ่นพื้นคอนกรีต'],
+    image: metalsheetDemo,
+  },
+  {
+    type: 'รั้วคอนกรีต',
+    path: 'fence',
+    groups: ['รั้วคอนกรีต'],
+    image: metalsheetDemo,
+  },
+  {
+    type: 'RetainingWall',
+    path: 'retainingwall',
+    groups: ['กำแพงกันดิน'],
+    image: metalsheetDemo,
+  },
 ];
 
 const RoofTypes = [
