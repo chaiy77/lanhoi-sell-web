@@ -8,6 +8,7 @@ import PropTypes, { object } from 'prop-types';
 import { Select, TextInput, AddCartButton, Button } from 'components/common';
 import { ProductGroups } from 'data/mockup-data';
 import { actions } from 'data/reducers/order';
+import { Metalsheet } from 'util/calculator';
 
 //Groups need to be loaded from DB, created by admin
 const GroupName = 'เมทัลชีท';
@@ -15,6 +16,35 @@ const Groups = R.find(R.propEq('type', GroupName))(ProductGroups);
 
 const RoofProductDetail = forwardRef(
   ({ roof, roof_index, register, errors }, ref) => {
+    const ItemCalculation = (roof, group) => {
+      console.log(group);
+      // console.log(group.products.map(i => i.name));
+      if (group === 'Metalsheet') {
+        //console.log(group.products.map(i => i.name));
+        const result = Metalsheet.getMetalsheets(
+          roof.type,
+          roof.data.A,
+          roof.data.B,
+          roof.data.C
+        );
+
+        return result;
+      }
+      if (group === 'Screw') {
+        //console.log(group.products.map(i => i.name));
+        const result = Metalsheet.getScrews(
+          roof.type,
+          roof.data.A,
+          roof.data.B,
+          roof.data.C,
+          roof.data.pDist
+        );
+
+        return result;
+      }
+      return 1;
+    };
+
     return (
       <div key={roof_index}>
         <div className="flex  border border-gray-500 bg-blue-400 p-2 rounded-t-md">
@@ -59,25 +89,76 @@ const RoofProductDetail = forwardRef(
         </div>
         <div className="border border-gray-500  rounded-b-md">
           {Groups.groups.map((group, i) => {
-            return (
-              <div className="flex flex-row my-2 py-2 px-4 " key={i}>
-                <div className="w-1/6"> {group} </div>
-                <div className="w-3/6 mx-3 ">
-                  <Select
-                    name={`${roof.no}` + '_product_' + `${group}`}
-                    register={register}
-                  />
+            if (group.index === 'Metalsheet') {
+              return (
+                <div>
+                  <div className="flex flex-row my-2 py-2 px-4 " key={i}>
+                    <div className="w-1/6"> {group.text} </div>
+                    <div className="w-3/6 mx-3 ">
+                      <Select
+                        name={`${roof.no}` + '_product_' + `${group.index}`}
+                        register={register}
+                        options={group.products.map(i => i.name)}
+                      />
+                    </div>
+                  </div>
+                  <ul className="list-disc px-16">
+                    {ItemCalculation(roof, group.index).map((no, i) => {
+                      console.log(no);
+                      return (
+                        <li className="">
+                          <div className="flex flex-row pb-2 ml-4 " key={i}>
+                            <div className="w-3/12"> ความยาว </div>
+                            <div className=" w-3/12 ml-4">
+                              <TextInput
+                                name={
+                                  `${roof.no}` + '_unit_' + `${group.index}`
+                                }
+                                register={register}
+                                defaultValue={no.long}
+                              />
+                            </div>
+                            <div className="w-2/12 ml-4">เมตร </div>
+                            <div className="w-2/12 ml-16"> จำนวน </div>
+                            <div className=" w-3/12 ml-4">
+                              <TextInput
+                                name={
+                                  `${roof.no}` + '_unit_' + `${group.index}`
+                                }
+                                register={register}
+                                defaultValue={no.total}
+                              />
+                            </div>
+                            <div className="w-2/12 ml-4"> {group.unit} </div>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
                 </div>
-                <div className=" w-1/6 mx-3">
-                  <TextInput
-                    name={`${roof.no}` + '_unit_' + `${group}`}
-                    register={register}
-                    defaultValue={() => SheetCalculation()}
-                  />
+              );
+            } else {
+              return (
+                <div className="flex flex-row my-2 py-2 px-4 " key={i}>
+                  <div className="w-1/6"> {group.text} </div>
+                  <div className="w-3/6 mx-3 ">
+                    <Select
+                      name={`${roof.no}` + '_product_' + `${group.index}`}
+                      register={register}
+                      options={group.products.map(i => i.name)}
+                    />
+                  </div>
+                  <div className=" w-2/12  mx-3">
+                    <TextInput
+                      name={`${roof.no}` + '_unit_' + `${group.text}`}
+                      register={register}
+                      defaultValue={ItemCalculation(roof, group.index)}
+                    />
+                  </div>
+                  <div className="w-1/6"> {group.unit} </div>
                 </div>
-                <div className="w-1/6"> units</div>
-              </div>
-            );
+              );
+            }
           })}
         </div>
         <div className="text-red-700 border-red-400 mt-1 mb-3 py-2 px-4">
@@ -97,10 +178,6 @@ const PreQuatation = ({ roofs, addOrder }) => {
     setRoofsData(roofs);
   }, [roofs]);
 
-  function SheetCalculation() {
-    // console.log('shhet calculation');
-    return 10;
-  }
   const addToCartClick = data => {
     // console.log(' add cart click');
     // console.log(data);

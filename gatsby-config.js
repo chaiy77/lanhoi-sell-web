@@ -34,6 +34,13 @@ module.exports = {
         path: `${__dirname}/src/styles`,
       },
     },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `util`,
+        path: `${__dirname}/src/util`,
+      },
+    },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
     {

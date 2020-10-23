@@ -8,6 +8,7 @@ import Layout from 'components/layout';
 import PropTypes from 'prop-types';
 import { Select, TextInput, Button } from 'components/common';
 import { ProductGroups } from 'data/mockup-data';
+import { Concrete } from 'util/calculator';
 
 //Groups need to be loaded from DB, created by admin
 const GroupName = 'Concrete';
@@ -15,6 +16,16 @@ const Groups = R.find(R.propEq('type', GroupName))(ProductGroups);
 
 const ConcreteProductDetail = forwardRef(
   ({ area, area_index, register, errors }, ref) => {
+    const ItemCalculation = (area, group) => {
+      // onsole.log('shhet calculation');
+      // console.log(group);
+      // console.log(area);
+      // console.log(group.products.map(i => i.name));
+
+      let c = Concrete.getConcreteVolume(area.data.A, area.data.B, area.data.C);
+      return c;
+    };
+
     return (
       <div key={area_index}>
         <div className="flex  border border-gray-500 bg-blue-400 p-2 rounded-t-md">
@@ -25,17 +36,17 @@ const ConcreteProductDetail = forwardRef(
             </div>
             <div className="flex flex-row">
               {area.data.A ? (
-                <div className="mx-3"> กว้าง = {area.data.A} เมตร.</div>
+                <div className="mx-3"> กว้าง = {area.data.A} m.</div>
               ) : (
                 <div></div>
               )}
               {area.data.B ? (
-                <div className="mx-3"> ยาว = {area.data.B} เมตร.</div>
+                <div className="mx-3"> ยาว = {area.data.B} m.</div>
               ) : (
                 <div></div>
               )}
               {area.data.C ? (
-                <div className="mx-3"> หนา = {area.data.C} เมตร.</div>
+                <div className="mx-3"> หนา = {area.data.C} m.</div>
               ) : (
                 <div></div>
               )}
@@ -46,18 +57,19 @@ const ConcreteProductDetail = forwardRef(
           {Groups.groups.map((group, i) => {
             return (
               <div className="flex flex-row my-2 py-2 px-4 " key={i}>
-                <div className="w-1/6"> {group} </div>
+                <div className="w-1/6"> {group.text} </div>
                 <div className="w-3/6 mx-3 ">
                   <Select
-                    name={`${area.no}` + '_product_' + `${group}`}
+                    name={`${area.no}` + '_product_' + `${group.index}`}
                     register={register}
+                    options={group.products.map(i => i.name)}
                   />
                 </div>
                 <div className=" w-1/6 mx-3">
                   <TextInput
                     name={`${area.no}` + '_unit_' + `${group}`}
                     register={register}
-                    defaultValue={() => SheetCalculation()}
+                    defaultValue={ItemCalculation(area, group)}
                   />
                 </div>
                 <div className="w-1/6"> คิว</div>
@@ -82,10 +94,6 @@ const ConcretePreQuatation = ({ areas, addOrder }) => {
     setRoofsData(areas);
   }, [areas]);
 
-  function SheetCalculation() {
-    // console.log('shhet calculation');
-    return 10;
-  }
   const addToCartClick = data => {
     console.log(' add cart click');
     console.log(data);

@@ -15,7 +15,7 @@ const TextInput = forwardRef(
               leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
           id="grid-last-name"
           type="text"
-          defaultValue={defaultValue}
+          value={defaultValue}
           onChange={e => onChange(e)}
           name={name}
           ref={register}
@@ -30,14 +30,14 @@ TextInput.propTypes = {
   name: PropTypes.string,
   register: PropTypes.func,
   onChange: PropTypes.func,
-  defaultValue: PropTypes.string,
+  defaultValue: PropTypes.number,
 };
 TextInput.defaultProps = {
   // text: 'insert',
   name: 'defaultName',
   register: () => {},
   onChange: () => {},
-  defaultValue: '',
+  defaultValue: 0,
 };
 
 export default TextInput;
