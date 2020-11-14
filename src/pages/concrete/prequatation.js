@@ -67,9 +67,9 @@ const ConcreteProductDetail = forwardRef(
                 </div>
                 <div className=" w-1/6 mx-3">
                   <TextInput
-                    name={`${area.no}` + '_unit_' + `${group}`}
+                    name={`${area.no}` + '_unit_' + `${group.index}`}
                     register={register}
-                    defaultValue={ItemCalculation(area, group)}
+                    defaultValue={ItemCalculation(area, group.index)}
                   />
                 </div>
                 <div className="w-1/6"> คิว</div>
@@ -88,6 +88,7 @@ const ConcreteProductDetail = forwardRef(
 
 const ConcretePreQuatation = ({ areas, addOrder }) => {
   const [areaData, setRoofsData] = useState([]);
+  // @ts-ignore
   const { register, handleSubmit, watch, errors } = useForm();
 
   useEffect(() => {
@@ -97,6 +98,7 @@ const ConcretePreQuatation = ({ areas, addOrder }) => {
   const addToCartClick = data => {
     console.log(' add cart click');
     console.log(data);
+    // @ts-ignore
     let prodType = Groups.groups;
     let _tempOrder = {};
     let _orders = [];
@@ -171,6 +173,7 @@ const ConcretePreQuatation = ({ areas, addOrder }) => {
                   {areaData.map((area, area_index) => {
                     return (
                       <ConcreteProductDetail
+                        // @ts-ignore
                         area={area}
                         area_index={area_index}
                         register={register}

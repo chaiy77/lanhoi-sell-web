@@ -8,28 +8,58 @@ import PropTypes, { object } from 'prop-types';
 import { Select, TextInput, AddCartButton, Button } from 'components/common';
 import { ProductGroups } from 'data/mockup-data';
 import { actions } from 'data/reducers/order';
+import { Slab } from 'util/calculator';
+import { slabLongType } from '../../data/mockup-data';
 
 //Groups need to be loaded from DB, created by admin
 const GroupName = 'Slab';
 const Groups = R.find(R.propEq('type', GroupName))(ProductGroups);
 
 const SlabProductDetail = forwardRef(
-  ({ slab, slab_index, register, errors }, ref) => {
+  ({ area, area_index, register, errors }, ref) => {
+    const ItemCalculation = area => {
+      console.log(area);
+      // console.log(area);
+      // console.log(group.products.map(i => i.name));
+
+      let result = 0;
+      result = Slab.getSlabs(area.A, area.B);
+      return result;
+    };
+
+    const getSlabProductType = long => {
+      // console.log(Groups.groups);
+      let _slabTypes = [];
+      Groups.groups.map((group, i) => {
+        // console.log(group);
+        if (group.index === 'แผ่นพื้นคอนกรีต') {
+          // console.log(group.products);
+          _slabTypes = group.products.filter(_s => _s.long === long);
+        }
+      });
+      // console.log(_slabTypes);
+      let result = _slabTypes.map(_s => {
+        return _s.name;
+      });
+      // console.log(result);
+      return result;
+    };
+
     return (
-      <div key={slab_index}>
+      <div key={area_index}>
         <div className="flex  border border-gray-500 bg-blue-400 p-2 rounded-t-md">
           <div className="flex flex-col">
             <div className="flex flex-row">
-              <div className="mx-2 text-2xl font-bold">Area No. {slab.no} </div>
+              <div className="mx-2 text-2xl font-bold">Area No. {area.no} </div>
             </div>
             <div className="flex flex-row">
-              {slab.data.A ? (
-                <div className="mx-3"> A = {slab.data.A} m.</div>
+              {area.data.A ? (
+                <div className="mx-3"> A = {area.data.A} m.</div>
               ) : (
                 <div></div>
               )}
-              {slab.data.B ? (
-                <div className="mx-3"> B = {slab.data.B} m.</div>
+              {area.data.B ? (
+                <div className="mx-3"> B = {area.data.B} m.</div>
               ) : (
                 <div></div>
               )}
@@ -40,18 +70,19 @@ const SlabProductDetail = forwardRef(
           {Groups.groups.map((group, i) => {
             return (
               <div className="flex flex-row my-2 py-2 px-4 " key={i}>
-                <div className="w-1/6"> {group} </div>
+                <div className="w-1/6"> {group.text} </div>
                 <div className="w-3/6 mx-3 ">
                   <Select
-                    name={`${slab.no}` + '_product_' + `${group}`}
+                    name={`${area.no}` + '_product_' + `${group.index}`}
                     register={register}
+                    options={getSlabProductType(area.data.B)}
                   />
                 </div>
                 <div className=" w-1/6 mx-3">
                   <TextInput
-                    name={`${slab.no}` + '_unit_' + `${group}`}
+                    name={`${area.no}` + '_unit_' + `${group.index}`}
                     register={register}
-                    defaultValue={() => SheetCalculation()}
+                    defaultValue={ItemCalculation(area.data)}
                   />
                 </div>
                 <div className="w-1/6"> แผ่น</div>
@@ -81,8 +112,8 @@ const PreQuatation = ({ slabs, addOrder }) => {
     return 10;
   }
   const addToCartClick = data => {
-    // console.log(' add cart click');
-    // console.log(data);
+    console.log(' add cart click');
+    console.log(data);
     let prodType = Groups.groups;
     let _tempOrder = {};
     let _orders = [];
@@ -141,7 +172,7 @@ const PreQuatation = ({ slabs, addOrder }) => {
             <div className="flex flex-row justify-between">
               <div>
                 <Button
-                  onClick={() => navigate('/metalsheet/customerdata')}
+                  onClick={() => navigate('/slab/customerdata')}
                   type="button"
                   label="Back"
                 />
@@ -157,8 +188,8 @@ const PreQuatation = ({ slabs, addOrder }) => {
                   {slabsData.map((slab, slab_index) => {
                     return (
                       <SlabProductDetail
-                        slab={slab}
-                        slab_index={slab_index}
+                        area={slab}
+                        area_index={slab_index}
                         register={register}
                         errors={errors}
                       />

@@ -6,7 +6,12 @@ import { connect } from 'react-redux';
 import { actions } from 'data/reducers/customer';
 import { useForm, Controller } from 'react-hook-form';
 import { Button, Select, Checkbox } from 'components/common';
+import { slabLogType } from 'data/mockup-data';
 import { navigate } from 'gatsby';
+import { slabLongType } from '../../data/mockup-data';
+
+// const GroupName = 'Slab';
+// const Groups = R.find(R.propEq('type', GroupName))(ProductGroups);
 
 const AreaDataInput = forwardRef(
   ({ i, valueChange, register, areaData, setValue }, ref) => {
@@ -31,8 +36,9 @@ const AreaDataInput = forwardRef(
           <div className="flex flex-col  justify-center items-center">
             <div className="flex flex-row flex-wrap  ">
               <div className="flex flex-col  ">
-                <div className="flex flex-row mt-2 ">
+                <div className="flex flex-row mt-2">
                   <div className="w-1/6">A :</div>
+
                   <input
                     name={'A_' + `${i}`}
                     // defaultValue={roofData.A}
@@ -48,12 +54,20 @@ const AreaDataInput = forwardRef(
                     //   handleValueChange(e, 'A');
                     // }}
                   />
+
                   <div className="">เมตร (หัวแผ่น)</div>
                 </div>
 
                 <div className="flex flex-row mt-2 ">
                   <div className="w-1/6">B :</div>
-                  <input
+                  <div className="ml-5">
+                    <Select
+                      name={'B_' + `${i}`}
+                      register={register}
+                      options={slabLongType}
+                    />
+                  </div>
+                  {/* <input
                     name={'B_' + `${i}`}
                     // defaultValue={roofData.B}
                     type="text"
@@ -67,8 +81,9 @@ const AreaDataInput = forwardRef(
                     // onChange={e => {
                     //   handleValueChange(e, 'B');
                     // }}
-                  />
-                  <div className="">เมตร </div>
+                  />  */}
+
+                  <div className="ml-4">เมตร </div>
                 </div>
               </div>
             </div>
@@ -223,6 +238,6 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const mapStateToProps = state => ({ areaData: state.Customer.slab });
+const mapStateToProps = state => ({ areaData: state.Customer.slabs });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SlabDataComponent);

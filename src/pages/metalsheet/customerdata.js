@@ -233,7 +233,6 @@ RoofDataIput.defaultProps = {
     },
   },
 };
-
 const CustomerData = ({ setRoofArea, roofDatas }) => {
   const [RoofAreas, setRoofAreas] = useState([]);
   const [NewRoofArea, addNewRoof] = useState([]);

@@ -62,7 +62,7 @@ const ProductGroups = [
     path: 'pile',
     groups: [
       {
-        index: 'Pile',
+        index: 'เสาเข็มคอนกรีต',
         text: 'เสาเข็มคอนกรีต',
         unit: 'm',
         products: [
@@ -78,12 +78,16 @@ const ProductGroups = [
     path: 'slab',
     groups: [
       {
-        index: 'Slab',
+        index: 'แผ่นพื้นคอนกรีต',
         text: 'แผ่นพื้นคอนกรีต',
         unit: 'pieces',
         products: [
-          { name: '1.5 m/4 lines', price: 400 },
-          { name: '1.5 m/6 lines', price: 450 },
+          { name: '1.0 m/4 lines', long: 1.0, price: 400 },
+          { name: '1.0 m/6 lines', long: 1.0, price: 450 },
+          { name: '1.5 m/4 lines', long: 1.5, price: 400 },
+          { name: '1.5 m/6 lines', long: 1.5, price: 450 },
+          { name: '2.0 m/4 lines', long: 2.0, price: 400 },
+          { name: '2.0 m/6 lines', long: 2.0, price: 450 },
         ],
       },
     ],
@@ -92,13 +96,39 @@ const ProductGroups = [
   {
     type: 'รั้วคอนกรีต',
     path: 'fence',
-    groups: ['รั้วคอนกรีต'],
+    groups: [
+      {
+        index: 'แผ่นรั้ว',
+        text: 'แผ่นรั้ว',
+        unit: 'pieces',
+        products: [{ name: '1.5 m', price: 150 }],
+      },
+      {
+        index: 'เสารั้ว',
+        text: 'เสารั้ว',
+        unit: 'pieces',
+        products: [{ name: '1.5 m', price: 400 }],
+      },
+    ],
     image: fenceImage,
   },
   {
     type: 'RetainingWall',
     path: 'retainingwall',
-    groups: ['กำแพงกันดิน'],
+    groups: [
+      {
+        index: 'แผ่นรั้ว',
+        text: 'แผ่นรั้ว',
+        unit: 'pieces',
+        products: [{ name: '1.5 m', price: 150 }],
+      },
+      {
+        index: 'เสารั้ว',
+        text: 'เสารั้ว',
+        unit: 'pieces',
+        products: [{ name: '1.5 m', price: 400 }],
+      },
+    ],
     image: fenceImage,
   },
 ];
@@ -112,6 +142,14 @@ const RoofTypes = [
   { name: 'type F', needA: true, needB: true, needC: false },
   { name: 'type G', needA: true, needB: true, needC: false },
 ];
+
+const concreteUseType = [
+  { name: ' usecase A' },
+  { name: ' usecase B' },
+  { name: ' usecase C' },
+];
+
+const slabLongType = [1, 1.5, 2];
 
 const MockOrders = {
   metalsheet: {
@@ -136,4 +174,4 @@ const MockOrders = {
   },
 };
 
-export { ProductGroups, RoofTypes, MockOrders };
+export { ProductGroups, RoofTypes, MockOrders, slabLongType, concreteUseType };

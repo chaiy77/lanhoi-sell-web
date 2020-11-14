@@ -8,6 +8,7 @@ import Layout from 'components/layout';
 import PropTypes from 'prop-types';
 import { Select, TextInput, Button } from 'components/common';
 import { ProductGroups } from 'data/mockup-data';
+import { RetainingWall } from 'util/calculator';
 
 //Groups need to be loaded from DB, created by admin
 const GroupName = 'รั้วคอนกรีต';
@@ -15,6 +16,16 @@ const Groups = R.find(R.propEq('type', GroupName))(ProductGroups);
 
 const WallProductDetail = forwardRef(
   ({ area, area_index, register, errors }, ref) => {
+    const ItemCalculation = group => {
+      console.log(group);
+      // console.log(area);
+      // console.log(group.products.map(i => i.name));
+
+      let result = 0;
+      if (group === 'แผ่นรั้ว') result = RetainingWall.getWallSheets();
+      if (group === 'เสารั้ว') result = RetainingWall.getWallColumns();
+      return result;
+    };
     return (
       <div key={area_index}>
         <div className="flex  border border-gray-500 bg-blue-400 p-2 rounded-t-md">
@@ -26,21 +37,23 @@ const WallProductDetail = forwardRef(
         </div>
         <div className="border border-gray-500  rounded-b-md">
           {Groups.groups.map((group, i) => {
-            console.log(area.data.A);
+            // console.log(area.data.A);
+            console.log(group);
             return (
               <div className="flex flex-row my-2 py-2 px-4 " key={i}>
-                <div className="w-1/6"> เสาเข็ม </div>
+                <div className="w-1/6"> {group.text} </div>
                 <div className="w-3/6 mx-3 ">
                   <Select
-                    name={`${area.no}` + '_product_' + `${group}`}
+                    name={`${area.no}` + '_product_' + `${group.index}`}
                     register={register}
+                    options={group.products.map(i => i.name)}
                   />
                 </div>
                 <div className=" w-1/6 mx-3">
                   <TextInput
-                    name={`${area.no}` + '_unit_' + `${group}`}
+                    name={`${area.no}` + '_unit_' + `${group.index}`}
                     register={register}
-                    defaultValue={`${area.data.A}`}
+                    defaultValue={ItemCalculation(group.index)}
                   />
                 </div>
                 <div className="w-1/6"> ต้น</div>

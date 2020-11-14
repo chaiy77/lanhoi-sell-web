@@ -80,7 +80,7 @@ const mOrder = orders => {
   let _summary = { no: _idx + 1, total: 1230, type: 'summary' };
   _data.push(_summary);
 
-  // console.log(_data);
+  console.log(_data);
   return _data;
 };
 

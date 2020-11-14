@@ -27,7 +27,7 @@ const RoofProductDetail = forwardRef(
           roof.data.B,
           roof.data.C
         );
-
+        console.log(result);
         return result;
       }
       if (group === 'Screw') {
@@ -179,8 +179,8 @@ const PreQuatation = ({ roofs, addOrder }) => {
   }, [roofs]);
 
   const addToCartClick = data => {
-    // console.log(' add cart click');
-    // console.log(data);
+    console.log(' add cart click');
+    console.log(data);
     let prodType = Groups.groups;
     let _tempOrder = {};
     let _orders = [];
