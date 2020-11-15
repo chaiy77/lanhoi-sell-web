@@ -20,7 +20,7 @@ const columns = [
   },
   {
     Header: 'ราคา/หน่วย',
-    accessor: 'unitPrice',
+    accessor: 'price',
   },
   {
     Header: 'หน่วย',
@@ -59,17 +59,28 @@ const mOrder = orders => {
               product: `${group}` + ' : No ' + `${area.no}`,
               type: 'group',
             });
-        // console.log(R.mergeAll(area.products));
+        console.log(area);
         let _products = R.mergeAll(area.products);
-
+        console.log(_products);
         //Set Product 's datas to Table
+
+        let _temp = {};
         R.keys(_products).map(prodName => {
           _idx = _idx + 1;
-          // console.log(prodName, ':', _products[prodName]);
+          console.log(prodName, ':', _products[prodName]);
+          // if (prodName === 'price') _temp['price'] = _products.price;
+          // else if (prodName === 'unit') _temp['unit'] = _products.unit;
+          // else {
+          //   (_temp['product'] = prodName),
+          //     (_temp['amount'] = _products[prodName]),
+          //     (_temp['no'] = _idx),
+          //     (_temp['type'] = 'product');
+          // }
           _data.push({
             no: _idx,
             product: prodName,
             amount: _products[prodName],
+            price: 111,
             type: 'product',
           });
         });

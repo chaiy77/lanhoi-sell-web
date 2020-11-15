@@ -7,23 +7,27 @@ import * as R from 'ramda';
 import Layout from 'components/layout';
 import PropTypes from 'prop-types';
 import { Select, TextInput, Button } from 'components/common';
-import { ProductGroups } from 'data/mockup-data';
+import {
+  ProductGroups,
+  getProductPrice,
+  getProductUnit,
+} from 'data/mockup-data';
 import { RetainingWall } from 'util/calculator';
 
 //Groups need to be loaded from DB, created by admin
-const GroupName = 'รั้วคอนกรีต';
+const GroupName = 'กำแพงกันดิน';
 const Groups = R.find(R.propEq('type', GroupName))(ProductGroups);
 
 const WallProductDetail = forwardRef(
   ({ area, area_index, register, errors }, ref) => {
-    const ItemCalculation = group => {
-      console.log(group);
+    const ItemCalculation = (group, area) => {
+      // console.log(group);
       // console.log(area);
-      // console.log(group.products.map(i => i.name));
-
       let result = 0;
-      if (group === 'แผ่นรั้ว') result = RetainingWall.getWallSheets();
-      if (group === 'เสารั้ว') result = RetainingWall.getWallColumns();
+      if (group.index === 'แผ่นรั้ว')
+        result = RetainingWall.getWallSheets(area.data.B, area.data.A);
+      if (group.index === 'เสารั้ว')
+        result = RetainingWall.getWallColumns(area.data.A);
       return result;
     };
     return (
@@ -45,18 +49,22 @@ const WallProductDetail = forwardRef(
                 <div className="w-3/6 mx-3 ">
                   <Select
                     name={`${area.no}` + '_product_' + `${group.index}`}
-                    register={register}
+                    register={register({
+                      validate: {
+                        notEmpty: value => value !== '',
+                      },
+                    })}
                     options={group.products.map(i => i.name)}
                   />
                 </div>
                 <div className=" w-1/6 mx-3">
                   <TextInput
-                    name={`${area.no}` + '_unit_' + `${group.index}`}
+                    name={`${area.no}` + '_amount_' + `${group.index}`}
                     register={register}
-                    defaultValue={ItemCalculation(group.index)}
+                    defaultValue={ItemCalculation(group, area)}
                   />
                 </div>
-                <div className="w-1/6"> ต้น</div>
+                <div className="w-1/6"> {group.unit}</div>
               </div>
             );
           })}
@@ -86,7 +94,8 @@ const WallPreQuatation = ({ areas, addOrder }) => {
   const addToCartClick = data => {
     console.log(' add cart click');
     console.log(data);
-    let prodType = Groups.groups;
+    console.log(Groups);
+    let prodType = Groups.type;
     let _tempOrder = {};
     let _orders = [];
     let _areas = [...areaData];
@@ -111,14 +120,17 @@ const WallPreQuatation = ({ areas, addOrder }) => {
 
         _prod = data[_prodKey];
 
-        R.keys(data).map(_unitKey => {
-          let _noUnit = parseInt(R.split('_', _unitKey)[0]);
+        R.keys(data).map(_amountKey => {
+          let _noAmount = parseInt(R.split('_', _amountKey)[0]);
           if (
-            R.contains('unit', _unitKey) &&
-            R.contains(_pGroup, _unitKey) &&
-            _noProd === _noUnit
+            R.contains('amount', _amountKey) &&
+            R.contains(_pGroup, _amountKey) &&
+            _noProd === _noAmount
           ) {
-            _tempOrder[_prod] = data[_unitKey];
+            (_tempOrder['name'] = _prod),
+              (_tempOrder['amount'] = data[_amountKey]);
+            _tempOrder['price'] = getProductPrice(prodType, _prod);
+            _tempOrder['unit'] = getProductUnit(prodType, _prod);
           }
         });
 
@@ -131,7 +143,7 @@ const WallPreQuatation = ({ areas, addOrder }) => {
       }
     });
     let order = { group: GroupName, areas: _orders };
-    // console.log(order);
+    console.log(order);
     addOrder(order);
     navigate('confirmorder');
   };

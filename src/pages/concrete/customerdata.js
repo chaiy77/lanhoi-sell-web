@@ -159,7 +159,7 @@ const ConcreteDataComponent = ({ areaData, setConcreteData }) => {
       const _areas = areaData.map((area, i) => {
         return (
           <AreaDataInput
-            no={i + 1}
+            i={i + 1}
             key={i + 1}
             register={register}
             areaData={area}
@@ -172,7 +172,7 @@ const ConcreteDataComponent = ({ areaData, setConcreteData }) => {
     } else {
       const _area = (
         <AreaDataInput
-          no="1"
+          i="1"
           key="1"
           register={register}
           setValue={setValue}

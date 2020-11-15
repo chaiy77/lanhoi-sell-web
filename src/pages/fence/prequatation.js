@@ -16,25 +16,29 @@ const Groups = R.find(R.propEq('type', GroupName))(ProductGroups);
 
 const FenceProductDetail = forwardRef(
   ({ area, area_index, register, errors }, ref) => {
-    const ItemCalculation = group => {
+    const ItemCalculation = (group, area) => {
       // onsole.log('shhet calculation');
+      console.log(area);
       console.log(group);
       // console.log(area);
       // console.log(group.products.map(i => i.name));
 
       let result = 0;
-      if (group === 'แผ่นรั้ว') result = Fence.getFenceSheets();
-      if (group === 'เสารั้ว') result = Fence.getFenceColumns();
+      if (group.index === 'แผ่นรั้ว')
+        result = Fence.getFenceSheets(area.data.B, area.data.A);
+      if (group.index === 'เสารั้ว')
+        result = Fence.getFenceColumns(area.data.A);
+      console.log(result);
       return result;
     };
 
     return (
       <div key={area_index}>
         <div className="flex  border border-gray-500 bg-blue-400 p-2 rounded-t-md">
-          <div className="flex flex-col">
-            <div className="flex flex-row">
-              <div className="mx-2 text-2xl font-bold">Area No. {area.no} </div>
-            </div>
+          <div className="flex flex-row items-end ">
+            <div className="mx-2 text-2xl font-bold">Area No. {area.no} </div>
+            <div className="mx-3 mb-1"> ยาว = {area.data.A}</div>
+            <div className="mx-3 mb-1 "> สูง = {area.data.B}</div>
           </div>
         </div>
         <div className="border border-gray-500  rounded-b-md">
@@ -46,7 +50,11 @@ const FenceProductDetail = forwardRef(
                 <div className="w-3/6 mx-3 ">
                   <Select
                     name={`${area.no}` + '_product_' + `${group.index}`}
-                    register={register}
+                    register={register({
+                      validate: {
+                        notEmpty: value => value !== '',
+                      },
+                    })}
                     options={group.products.map(i => i.name)}
                   />
                 </div>
@@ -54,10 +62,10 @@ const FenceProductDetail = forwardRef(
                   <TextInput
                     name={`${area.no}` + '_unit_' + `${group.index}`}
                     register={register}
-                    defaultValue={ItemCalculation(group.index)}
+                    defaultValue={ItemCalculation(group, area)}
                   />
                 </div>
-                <div className="w-1/6"> ต้น</div>
+                <div className="w-1/6"> {group.unit}</div>
               </div>
             );
           })}

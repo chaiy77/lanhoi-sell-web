@@ -20,6 +20,7 @@ const WallDataInput = forwardRef(
       console.log('useEffect : ', wallsData);
       if (!R.isEmpty(wallsData)) {
         setValue('A_' + `${i}`, wallsData.data.A);
+        setValue('B_' + `${i}`, wallsData.data.B);
       }
     }, [wallsData]);
 
@@ -31,7 +32,7 @@ const WallDataInput = forwardRef(
             <div className="flex flex-row flex-wrap  ">
               <div className="flex flex-col  ">
                 <div className="flex flex-row mt-2 ">
-                  <div className="">ความยาว :</div>
+                  <div className="">ความยาวกำแพง :</div>
                   <input
                     name={'A_' + `${i}`}
                     // defaultValue={roofData.A}
@@ -45,6 +46,25 @@ const WallDataInput = forwardRef(
                     })}
                     // onChange={e => {
                     //   handleValueChange(e, 'A');
+                    // }}
+                  />
+                  <div className="">เมตร</div>
+                </div>
+                <div className="flex flex-row mt-2 ">
+                  <div className="w-3/12">ความสูง :</div>
+                  <input
+                    name={'B_' + `${i}`}
+                    // defaultValue={roofData.B}
+                    type="text"
+                    // disabled={!needB}
+                    className={dataInputStyle}
+                    ref={register({
+                      validate: {
+                        positiveNumber: value => parseFloat(value) > 0,
+                      },
+                    })}
+                    // onChange={e => {
+                    //   handleValueChange(e, 'B');
                     // }}
                   />
                   <div className="">เมตร</div>
@@ -94,7 +114,7 @@ const WallDataComponent = ({ wallData, setWallData }) => {
       const _walls = wallData.map((wall, i) => {
         return (
           <WallDataInput
-            no={i + 1}
+            i={i + 1}
             key={i + 1}
             register={register}
             wallsData={wall}
@@ -107,7 +127,7 @@ const WallDataComponent = ({ wallData, setWallData }) => {
     } else {
       const _wall = (
         <WallDataInput
-          no="1"
+          i="1"
           key="1"
           register={register}
           setValue={setValue}

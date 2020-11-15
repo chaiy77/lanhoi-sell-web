@@ -3,6 +3,8 @@ import fenceImage from 'images/fence.jpg';
 import pileImage from 'images/pile.jpg';
 import concreteImage from 'images/concrete.jpg';
 import slabImage from 'images/slab.jpg';
+import * as R from 'ramda';
+
 import { string } from 'prop-types';
 
 const ProductGroups = [
@@ -100,33 +102,39 @@ const ProductGroups = [
       {
         index: 'แผ่นรั้ว',
         text: 'แผ่นรั้ว',
-        unit: 'pieces',
-        products: [{ name: '1.5 m', price: 150 }],
+        unit: 'แผ่น',
+        products: [
+          { name: '1.5 m', price: 150 },
+          { name: '1.5 m / 6 lines', price: 150 },
+        ],
       },
       {
         index: 'เสารั้ว',
         text: 'เสารั้ว',
-        unit: 'pieces',
+        unit: 'ต้น',
         products: [{ name: '1.5 m', price: 400 }],
       },
     ],
     image: fenceImage,
   },
   {
-    type: 'RetainingWall',
+    type: 'กำแพงกันดิน',
     path: 'retainingwall',
     groups: [
       {
         index: 'แผ่นรั้ว',
         text: 'แผ่นรั้ว',
-        unit: 'pieces',
-        products: [{ name: '1.5 m', price: 150 }],
+        unit: 'แผ่น',
+        products: [
+          { name: 'ร้ัวคอนกรีต 1.5 m / 4 lines', price: 150 },
+          { name: 'ร้ัวคอนกรีต 1.5 m / 6 lines', price: 150 },
+        ],
       },
       {
         index: 'เสารั้ว',
         text: 'เสารั้ว',
-        unit: 'pieces',
-        products: [{ name: '1.5 m', price: 400 }],
+        unit: 'ต้น',
+        products: [{ name: 'เสารั้ว 1.5 m', price: 400 }],
       },
     ],
     image: fenceImage,
@@ -174,4 +182,46 @@ const MockOrders = {
   },
 };
 
-export { ProductGroups, RoofTypes, MockOrders, slabLongType, concreteUseType };
+const getProductPrice = (productType, productName) => {
+  const _prodGroup = R.find(R.propEq('type', productType))(ProductGroups);
+  // console.log(_prodGroup);
+  let price = 0;
+  _prodGroup.groups.map(group => {
+    // console.log(group);
+    group.products.map(prod => {
+      if (productName === prod.name) {
+        console.log(prod.price);
+        price = prod.price;
+        return;
+      }
+    });
+  });
+  return price;
+};
+
+const getProductUnit = (productType, productName) => {
+  const _prodGroup = R.find(R.propEq('type', productType))(ProductGroups);
+  // console.log(_prodGroup);
+  let unit = 0;
+  _prodGroup.groups.map(group => {
+    // console.log(group);
+    group.products.map(prod => {
+      if (productName === prod.name) {
+        // console.log(prod.price);
+        unit = group.unit;
+        return;
+      }
+    });
+  });
+  return unit;
+};
+
+export {
+  ProductGroups,
+  RoofTypes,
+  MockOrders,
+  slabLongType,
+  concreteUseType,
+  getProductPrice,
+  getProductUnit,
+};

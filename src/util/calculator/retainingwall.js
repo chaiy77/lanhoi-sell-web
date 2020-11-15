@@ -8,6 +8,7 @@ const getWallSheets = (high, long) => {
 
 const getWallColumns = long => {
   const columns = Math.ceil(long / dist) + 1;
+
   return columns;
 };
 

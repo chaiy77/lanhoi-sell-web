@@ -61,7 +61,11 @@ const ConcreteProductDetail = forwardRef(
                 <div className="w-3/6 mx-3 ">
                   <Select
                     name={`${area.no}` + '_product_' + `${group.index}`}
-                    register={register}
+                    register={register({
+                      validate: {
+                        notEmpty: value => value !== '',
+                      },
+                    })}
                     options={group.products.map(i => i.name)}
                   />
                 </div>

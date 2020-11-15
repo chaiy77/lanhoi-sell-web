@@ -20,6 +20,7 @@ const FenceDataInput = forwardRef(
       console.log('useEffect : ', fencesData);
       if (!R.isEmpty(fencesData)) {
         setValue('A_' + `${i}`, fencesData.data.A);
+        setValue('B_' + `${i}`, fencesData.data.B);
       }
     }, [fencesData]);
 
@@ -31,12 +32,10 @@ const FenceDataInput = forwardRef(
             <div className="flex flex-row flex-wrap  ">
               <div className="flex flex-col  ">
                 <div className="flex flex-row mt-2 ">
-                  <div className="">ความยาวรั้ว :</div>
+                  <div className="w-3/12">ความยาวรั้ว :</div>
                   <input
                     name={'A_' + `${i}`}
-                    // defaultValue={roofData.A}
                     type="text"
-                    // disabled={!needA}
                     className={dataInputStyle}
                     ref={register({
                       validate: {
@@ -45,6 +44,25 @@ const FenceDataInput = forwardRef(
                     })}
                     // onChange={e => {
                     //   handleValueChange(e, 'A');
+                    // }}
+                  />
+                  <div className="">เมตร</div>
+                </div>
+                <div className="flex flex-row mt-2 ">
+                  <div className="w-3/12">ความสูง :</div>
+                  <input
+                    name={'B_' + `${i}`}
+                    // defaultValue={roofData.B}
+                    type="text"
+                    // disabled={!needB}
+                    className={dataInputStyle}
+                    ref={register({
+                      validate: {
+                        positiveNumber: value => parseFloat(value) > 0,
+                      },
+                    })}
+                    // onChange={e => {
+                    //   handleValueChange(e, 'B');
                     // }}
                   />
                   <div className="">เมตร</div>
@@ -95,7 +113,7 @@ const FenceDataComponent = ({ fenceData, setFenceData }) => {
       const _fences = fenceData.map((fence, i) => {
         return (
           <FenceDataInput
-            no={i + 1}
+            i={i + 1}
             key={i + 1}
             register={register}
             fencesData={fence}
@@ -108,7 +126,7 @@ const FenceDataComponent = ({ fenceData, setFenceData }) => {
     } else {
       const _fence = (
         <FenceDataInput
-          no="1"
+          i="1"
           key="1"
           register={register}
           setValue={setValue}

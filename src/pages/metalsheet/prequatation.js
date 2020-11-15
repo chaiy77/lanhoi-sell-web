@@ -97,7 +97,11 @@ const RoofProductDetail = forwardRef(
                     <div className="w-3/6 mx-3 ">
                       <Select
                         name={`${roof.no}` + '_product_' + `${group.index}`}
-                        register={register}
+                        register={register({
+                          validate: {
+                            notEmpty: value => value !== '',
+                          },
+                        })}
                         options={group.products.map(i => i.name)}
                       />
                     </div>
@@ -144,7 +148,11 @@ const RoofProductDetail = forwardRef(
                   <div className="w-3/6 mx-3 ">
                     <Select
                       name={`${roof.no}` + '_product_' + `${group.index}`}
-                      register={register}
+                      register={register({
+                        validate: {
+                          notEmpty: value => value !== '',
+                        },
+                      })}
                       options={group.products.map(i => i.name)}
                     />
                   </div>
