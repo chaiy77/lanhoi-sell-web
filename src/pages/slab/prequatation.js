@@ -6,7 +6,11 @@ import * as R from 'ramda';
 import Layout from 'components/layout';
 import PropTypes, { object } from 'prop-types';
 import { Select, TextInput, AddCartButton, Button } from 'components/common';
-import { ProductGroups } from 'data/mockup-data';
+import {
+  ProductGroups,
+  getProductPrice,
+  getProductUnit,
+} from 'data/mockup-data';
 import { actions } from 'data/reducers/order';
 import { Slab } from 'util/calculator';
 import { slabLongType } from '../../data/mockup-data';
@@ -84,7 +88,7 @@ const SlabProductDetail = forwardRef(
                 </div>
                 <div className=" w-1/6 mx-3">
                   <TextInput
-                    name={`${area.no}` + '_unit_' + `${group.index}`}
+                    name={`${area.no}` + '_amount_' + `${group.index}`}
                     register={register}
                     defaultValue={ItemCalculation(area.data)}
                   />
@@ -118,7 +122,7 @@ const PreQuatation = ({ slabs, addOrder }) => {
   const addToCartClick = data => {
     console.log(' add cart click');
     console.log(data);
-    let prodType = Groups.groups;
+    let prodType = Groups.type;
     let _tempOrder = {};
     let _orders = [];
     let _slabs = [...slabsData];
@@ -143,14 +147,17 @@ const PreQuatation = ({ slabs, addOrder }) => {
 
         _prod = data[_prodKey];
 
-        R.keys(data).map(_unitKey => {
-          let _noUnit = parseInt(R.split('_', _unitKey)[0]);
+        R.keys(data).map(_amountKey => {
+          let _noUnit = parseInt(R.split('_', _amountKey)[0]);
           if (
-            R.contains('unit', _unitKey) &&
-            R.contains(_pGroup, _unitKey) &&
+            R.contains('amount', _amountKey) &&
+            R.contains(_pGroup, _amountKey) &&
             _noProd === _noUnit
           ) {
-            _tempOrder[_prod] = data[_unitKey];
+            _tempOrder['name'] = _prod;
+            _tempOrder['amount'] = data[_amountKey];
+            _tempOrder['price'] = getProductPrice(prodType, _prod);
+            _tempOrder['unit'] = getProductUnit(prodType, _prod);
           }
         });
 

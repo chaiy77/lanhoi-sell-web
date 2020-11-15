@@ -7,7 +7,11 @@ import * as R from 'ramda';
 import Layout from 'components/layout';
 import PropTypes from 'prop-types';
 import { Select, TextInput, Button } from 'components/common';
-import { ProductGroups } from 'data/mockup-data';
+import {
+  ProductGroups,
+  getProductUnit,
+  getProductPrice,
+} from 'data/mockup-data';
 // import { Pile } from 'util/calculator';
 
 //Groups need to be loaded from DB, created by admin
@@ -48,7 +52,7 @@ const PileProductDetail = forwardRef(
                 </div>
                 <div className=" w-1/6 mx-3">
                   <TextInput
-                    name={`${area.no}` + '_unit_' + `${group.index}`}
+                    name={`${area.no}` + '_amount_' + `${group.index}`}
                     register={register}
                     defaultValue={`${area.data.A}`}
                   />
@@ -83,7 +87,7 @@ const PilePreQuatation = ({ areas, addOrder }) => {
   const addToCartClick = data => {
     console.log(' add cart click');
     console.log(data);
-    let prodType = Groups.groups;
+    let prodType = Groups.type;
     let _tempOrder = {};
     let _orders = [];
     let _areas = [...areaData];
@@ -108,14 +112,17 @@ const PilePreQuatation = ({ areas, addOrder }) => {
 
         _prod = data[_prodKey];
 
-        R.keys(data).map(_unitKey => {
-          let _noUnit = parseInt(R.split('_', _unitKey)[0]);
+        R.keys(data).map(_amountKey => {
+          let _noUnit = parseInt(R.split('_', _amountKey)[0]);
           if (
-            R.contains('unit', _unitKey) &&
-            R.contains(_pGroup, _unitKey) &&
+            R.contains('amount', _amountKey) &&
+            R.contains(_pGroup, _amountKey) &&
             _noProd === _noUnit
           ) {
-            _tempOrder[_prod] = data[_unitKey];
+            _tempOrder['name'] = _prod;
+            _tempOrder['amount'] = data[_amountKey];
+            _tempOrder['price'] = getProductPrice(prodType, _prod);
+            _tempOrder['unit'] = getProductUnit(prodType, _prod);
           }
         });
 

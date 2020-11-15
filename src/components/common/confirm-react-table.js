@@ -49,7 +49,7 @@ const ConfirmTable = ({ columns, data }) => {
                 {...row.getRowProps()}
               >
                 {row.cells.map((cell, i) => {
-                  console.log(row.original);
+                  // console.log(row.original);
                   if (row.original.type === 'group' && _isRenderGroup) {
                     _isRenderGroup = false;
                     return (

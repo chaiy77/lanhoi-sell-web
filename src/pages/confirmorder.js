@@ -42,6 +42,7 @@ const mOrder = orders => {
   console.log(_mOrder);
   const _data = [];
   let _idx = 0;
+  let _sum = 0;
   R.keys(_mOrder).map(group => {
     //Add Product group to table's data
 
@@ -59,36 +60,25 @@ const mOrder = orders => {
               product: `${group}` + ' : No ' + `${area.no}`,
               type: 'group',
             });
-        console.log(area);
-        let _products = R.mergeAll(area.products);
-        console.log(_products);
-        //Set Product 's datas to Table
-
-        let _temp = {};
-        R.keys(_products).map(prodName => {
+        // console.log(area);
+        area.products.map(prod => {
           _idx = _idx + 1;
-          console.log(prodName, ':', _products[prodName]);
-          // if (prodName === 'price') _temp['price'] = _products.price;
-          // else if (prodName === 'unit') _temp['unit'] = _products.unit;
-          // else {
-          //   (_temp['product'] = prodName),
-          //     (_temp['amount'] = _products[prodName]),
-          //     (_temp['no'] = _idx),
-          //     (_temp['type'] = 'product');
-          // }
           _data.push({
             no: _idx,
-            product: prodName,
-            amount: _products[prodName],
-            price: 111,
+            product: prod.name,
+            amount: prod.amount,
+            price: prod.price,
+            unit: prod.unit,
+            total: prod.price * prod.amount,
             type: 'product',
           });
+          _sum = _sum + prod.price * prod.amount;
         });
       });
     }
   });
   //Add Summary to Table
-  let _summary = { no: _idx + 1, total: 1230, type: 'summary' };
+  let _summary = { no: _idx + 1, total: _sum, type: 'summary' };
   _data.push(_summary);
 
   console.log(_data);

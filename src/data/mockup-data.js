@@ -17,9 +17,9 @@ const ProductGroups = [
         text: 'แผ่นเมทัลชีท',
         unit: 'แผ่น',
         products: [
-          { name: 'LH/แดง/0.5', price: 60 },
-          { name: 'LH/เขียว/0.5', price: 60 },
-          { name: 'LH/โปร่งแสง/0.5', price: 150 },
+          { name: 'แผ่นเมทัลชีท LH/แดง/0.5', price: 60 },
+          { name: 'แผ่นเมทัลชีท LH/เขียว/0.5', price: 60 },
+          { name: 'แผ่นเมทัลชีท LH/โปร่งแสง/0.5', price: 150 },
         ],
       },
       {
@@ -27,8 +27,8 @@ const ProductGroups = [
         text: 'สกรู',
         unit: 'ตัว',
         products: [
-          { name: 'LH/1 inch', price: 60 },
-          { name: 'LH/1.5 inch', price: 60 },
+          { name: 'สกรู LH/1 inch', price: 60 },
+          { name: 'สกรู LH/1.5 inch', price: 60 },
         ],
       },
       {
@@ -36,8 +36,8 @@ const ProductGroups = [
         text: 'พียู-โฟม',
         unit: 'ตารางเมตร',
         products: [
-          { name: 'LH/สีขาว', price: 60 },
-          { name: 'LH/ดำ', price: 60 },
+          { name: 'พียูโฟม LH/สีขาว', price: 60 },
+          { name: 'พียูโฟม LH/ดำ', price: 60 },
         ],
       },
     ],
@@ -50,10 +50,10 @@ const ProductGroups = [
       {
         index: 'Concrete',
         text: 'คอนกรีต',
-        unit: 'm*m',
+        unit: 'คิว',
         products: [
-          { name: 'ST-210', price: 1000 },
-          { name: 'ST-240', price: 1100 },
+          { name: 'คอนกรีต ST-210', price: 1000 },
+          { name: 'คอนกรีต ST-240', price: 1100 },
         ],
       },
     ],
@@ -66,10 +66,10 @@ const ProductGroups = [
       {
         index: 'เสาเข็มคอนกรีต',
         text: 'เสาเข็มคอนกรีต',
-        unit: 'm',
+        unit: 'ต้น',
         products: [
-          { name: '12 inches', price: 1200 },
-          { name: '10 inches', price: 1000 },
+          { name: 'เสาเข็มคอนกรีต 4 M', price: 1200 },
+          { name: 'เสาเข็มคอนกรีต 6 M', price: 1000 },
         ],
       },
     ],
@@ -82,14 +82,14 @@ const ProductGroups = [
       {
         index: 'แผ่นพื้นคอนกรีต',
         text: 'แผ่นพื้นคอนกรีต',
-        unit: 'pieces',
+        unit: 'แผ่น',
         products: [
-          { name: '1.0 m/4 lines', long: 1.0, price: 400 },
-          { name: '1.0 m/6 lines', long: 1.0, price: 450 },
-          { name: '1.5 m/4 lines', long: 1.5, price: 400 },
-          { name: '1.5 m/6 lines', long: 1.5, price: 450 },
-          { name: '2.0 m/4 lines', long: 2.0, price: 400 },
-          { name: '2.0 m/6 lines', long: 2.0, price: 450 },
+          { name: 'แผ่นพื้นคอนกรีต 1.0 m/4 lines', long: 1.0, price: 400 },
+          { name: 'แผ่นพื้นคอนกรีต 1.0 m/6 lines', long: 1.0, price: 450 },
+          { name: 'แผ่นพื้นคอนกรีต 1.5 m/4 lines', long: 1.5, price: 400 },
+          { name: 'แผ่นพื้นคอนกรีต 1.5 m/6 lines', long: 1.5, price: 450 },
+          { name: 'แผ่นพื้นคอนกรีต 2.0 m/4 lines', long: 2.0, price: 400 },
+          { name: 'แผ่นพื้นคอนกรีต 2.0 m/6 lines', long: 2.0, price: 450 },
         ],
       },
     ],
@@ -104,15 +104,15 @@ const ProductGroups = [
         text: 'แผ่นรั้ว',
         unit: 'แผ่น',
         products: [
-          { name: '1.5 m', price: 150 },
-          { name: '1.5 m / 6 lines', price: 150 },
+          { name: 'แผ่นคอนกรีต 1.5 m', price: 150 },
+          { name: 'แผ่นคอนกรีต 1.5 m / 6 lines', price: 150 },
         ],
       },
       {
         index: 'เสารั้ว',
         text: 'เสารั้ว',
         unit: 'ต้น',
-        products: [{ name: '1.5 m', price: 400 }],
+        products: [{ name: 'เสาคอนกรีต 1.5 m', price: 400 }],
       },
     ],
     image: fenceImage,
@@ -126,8 +126,8 @@ const ProductGroups = [
         text: 'แผ่นรั้ว',
         unit: 'แผ่น',
         products: [
-          { name: 'ร้ัวคอนกรีต 1.5 m / 4 lines', price: 150 },
-          { name: 'ร้ัวคอนกรีต 1.5 m / 6 lines', price: 150 },
+          { name: 'แผ่นคอนกรีต 1.5 m / 4 lines', price: 150 },
+          { name: 'แผ่นคอนกรีต 1.5 m / 6 lines', price: 150 },
         ],
       },
       {
@@ -184,7 +184,8 @@ const MockOrders = {
 
 const getProductPrice = (productType, productName) => {
   const _prodGroup = R.find(R.propEq('type', productType))(ProductGroups);
-  // console.log(_prodGroup);
+  console.log(_prodGroup);
+  console.log(productType);
   let price = 0;
   _prodGroup.groups.map(group => {
     // console.log(group);

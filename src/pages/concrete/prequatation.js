@@ -7,7 +7,11 @@ import * as R from 'ramda';
 import Layout from 'components/layout';
 import PropTypes from 'prop-types';
 import { Select, TextInput, Button } from 'components/common';
-import { ProductGroups } from 'data/mockup-data';
+import {
+  ProductGroups,
+  getProductPrice,
+  getProductUnit,
+} from 'data/mockup-data';
 import { Concrete } from 'util/calculator';
 
 //Groups need to be loaded from DB, created by admin
@@ -71,7 +75,7 @@ const ConcreteProductDetail = forwardRef(
                 </div>
                 <div className=" w-1/6 mx-3">
                   <TextInput
-                    name={`${area.no}` + '_unit_' + `${group.index}`}
+                    name={`${area.no}` + '_amount_' + `${group.index}`}
                     register={register}
                     defaultValue={ItemCalculation(area, group.index)}
                   />
@@ -103,7 +107,7 @@ const ConcretePreQuatation = ({ areas, addOrder }) => {
     console.log(' add cart click');
     console.log(data);
     // @ts-ignore
-    let prodType = Groups.groups;
+    let prodType = Groups.type;
     let _tempOrder = {};
     let _orders = [];
     let _areas = [...areaData];
@@ -113,9 +117,10 @@ const ConcretePreQuatation = ({ areas, addOrder }) => {
 
     R.keys(data).map(key => {
       _no = parseInt(key.substring(0, key.indexOf('_')));
-      _areas.map(area =>
-        parseInt(area.no) === _no ? (_type = area.type) : ''
-      );
+      _areas.map(area => {
+        console.log(area);
+        parseInt(area.no) === _no ? (_type = area.type) : '';
+      });
       let _temp = { no: _no, type: _type, products: [] };
       if (!R.contains(_temp, _orders)) _orders.push(_temp);
     });
@@ -128,14 +133,17 @@ const ConcretePreQuatation = ({ areas, addOrder }) => {
 
         _prod = data[_prodKey];
 
-        R.keys(data).map(_unitKey => {
-          let _noUnit = parseInt(R.split('_', _unitKey)[0]);
+        R.keys(data).map(_amountKey => {
+          let _noUnit = parseInt(R.split('_', _amountKey)[0]);
           if (
-            R.contains('unit', _unitKey) &&
-            R.contains(_pGroup, _unitKey) &&
+            R.contains('amount', _amountKey) &&
+            R.contains(_pGroup, _amountKey) &&
             _noProd === _noUnit
           ) {
-            _tempOrder[_prod] = data[_unitKey];
+            _tempOrder['name'] = _prod;
+            _tempOrder['amount'] = data[_amountKey];
+            _tempOrder['price'] = getProductPrice(prodType, _prod);
+            _tempOrder['unit'] = getProductUnit(prodType, _prod);
           }
         });
 
@@ -144,7 +152,7 @@ const ConcretePreQuatation = ({ areas, addOrder }) => {
             _orders[i]['products'].push(_tempOrder);
           }
         });
-        // console.log(_orders);
+        console.log(_orders);
       }
     });
     let order = { group: GroupName, areas: _orders };

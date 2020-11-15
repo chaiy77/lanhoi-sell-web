@@ -6,7 +6,11 @@ import * as R from 'ramda';
 import Layout from 'components/layout';
 import PropTypes, { object } from 'prop-types';
 import { Select, TextInput, AddCartButton, Button } from 'components/common';
-import { ProductGroups } from 'data/mockup-data';
+import {
+  ProductGroups,
+  getProductPrice,
+  getProductUnit,
+} from 'data/mockup-data';
 import { actions } from 'data/reducers/order';
 import { Metalsheet } from 'util/calculator';
 
@@ -116,7 +120,7 @@ const RoofProductDetail = forwardRef(
                             <div className=" w-3/12 ml-4">
                               <TextInput
                                 name={
-                                  `${roof.no}` + '_unit_' + `${group.index}`
+                                  `${roof.no}` + '_length_' + `${group.index}`
                                 }
                                 register={register}
                                 defaultValue={no.long}
@@ -127,7 +131,7 @@ const RoofProductDetail = forwardRef(
                             <div className=" w-3/12 ml-4">
                               <TextInput
                                 name={
-                                  `${roof.no}` + '_unit_' + `${group.index}`
+                                  `${roof.no}` + '_amount_' + `${group.index}`
                                 }
                                 register={register}
                                 defaultValue={no.total}
@@ -158,7 +162,7 @@ const RoofProductDetail = forwardRef(
                   </div>
                   <div className=" w-2/12  mx-3">
                     <TextInput
-                      name={`${roof.no}` + '_unit_' + `${group.text}`}
+                      name={`${roof.no}` + '_amount_' + `${group.index}`}
                       register={register}
                       defaultValue={ItemCalculation(roof, group.index)}
                     />
@@ -189,7 +193,7 @@ const PreQuatation = ({ roofs, addOrder }) => {
   const addToCartClick = data => {
     console.log(' add cart click');
     console.log(data);
-    let prodType = Groups.groups;
+    let prodType = Groups.type;
     let _tempOrder = {};
     let _orders = [];
     let _roofs = [...roofsData];
@@ -208,20 +212,33 @@ const PreQuatation = ({ roofs, addOrder }) => {
 
     R.keys(data).map(_prodKey => {
       if (R.contains('product', _prodKey)) {
+        // console.log(_prodKey);
         _tempOrder = {};
         let _noProd = parseInt(R.split('_', _prodKey)[0]);
         let _pGroup = R.split('_', _prodKey)[2];
 
         _prod = data[_prodKey];
-
-        R.keys(data).map(_unitKey => {
-          let _noUnit = parseInt(R.split('_', _unitKey)[0]);
+        R.keys(data).map(_amountKey => {
+          let _noUnit = parseInt(R.split('_', _amountKey)[0]);
+          let length = '';
           if (
-            R.contains('unit', _unitKey) &&
-            R.contains(_pGroup, _unitKey) &&
+            R.contains('amount', _amountKey) &&
+            R.contains(_pGroup, _amountKey) &&
             _noProd === _noUnit
           ) {
-            _tempOrder[_prod] = data[_unitKey];
+            R.keys(data).map(_lengthKey => {
+              if (
+                R.contains('length', _lengthKey) &&
+                R.contains(_pGroup, _lengthKey) &&
+                R.contains(_noUnit, _lengthKey)
+              )
+                length = ' ขนาด ' + data[_lengthKey] + ' เมตร';
+            });
+
+            _tempOrder['name'] = _prod + length;
+            _tempOrder['amount'] = data[_amountKey];
+            _tempOrder['price'] = getProductPrice(prodType, _prod);
+            _tempOrder['unit'] = getProductUnit(prodType, _prod);
           }
         });
 
@@ -234,6 +251,7 @@ const PreQuatation = ({ roofs, addOrder }) => {
       }
     });
     let order = { group: GroupName, areas: _orders };
+    console.log(order);
     addOrder(order);
     navigate('confirmorder');
   };

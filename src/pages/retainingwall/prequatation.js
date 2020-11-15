@@ -127,8 +127,8 @@ const WallPreQuatation = ({ areas, addOrder }) => {
             R.contains(_pGroup, _amountKey) &&
             _noProd === _noAmount
           ) {
-            (_tempOrder['name'] = _prod),
-              (_tempOrder['amount'] = data[_amountKey]);
+            _tempOrder['name'] = _prod;
+            _tempOrder['amount'] = data[_amountKey];
             _tempOrder['price'] = getProductPrice(prodType, _prod);
             _tempOrder['unit'] = getProductUnit(prodType, _prod);
           }
