@@ -60,18 +60,32 @@ const mOrder = orders => {
               product: `${group}` + ' : No ' + `${area.no}`,
               type: 'group',
             });
-        // console.log(area);
+        console.log(area);
         area.products.map(prod => {
           _idx = _idx + 1;
-          _data.push({
-            no: _idx,
-            product: prod.name,
-            amount: prod.amount,
-            price: prod.price,
-            unit: prod.unit,
-            total: prod.price * prod.amount,
-            type: 'product',
-          });
+          //console.log(prod.index);
+          if (prod.index === 'Metalsheet') {
+            // console.log('index = metalsheet');
+            _data.push({
+              no: _idx,
+              product: prod.name,
+              amount: prod.amount,
+              price: Math.floor(prod.price * prod.length),
+              unit: prod.unit,
+              total: prod.price * prod.amount,
+              type: 'product',
+            });
+          } else {
+            _data.push({
+              no: _idx,
+              product: prod.name,
+              amount: prod.amount,
+              price: prod.price,
+              unit: prod.unit,
+              total: prod.price * prod.amount,
+              type: 'product',
+            });
+          }
           _sum = _sum + prod.price * prod.amount;
         });
       });
@@ -80,7 +94,6 @@ const mOrder = orders => {
   //Add Summary to Table
   let _summary = { no: _idx + 1, total: _sum, type: 'summary' };
   _data.push(_summary);
-
   console.log(_data);
   return _data;
 };

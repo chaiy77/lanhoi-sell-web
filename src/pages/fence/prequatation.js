@@ -136,6 +136,7 @@ const FencePreQuatation = ({ areas, addOrder }) => {
             _tempOrder['amount'] = data[_amountKey];
             _tempOrder['price'] = getProductPrice(prodType, _prod);
             _tempOrder['unit'] = getProductUnit(prodType, _prod);
+            _tempOrder['index'] = R.split('_', _amountKey)[2];
           }
         });
 

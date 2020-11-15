@@ -231,14 +231,17 @@ const PreQuatation = ({ roofs, addOrder }) => {
                 R.contains('length', _lengthKey) &&
                 R.contains(_pGroup, _lengthKey) &&
                 R.contains(_noUnit, _lengthKey)
-              )
+              ) {
                 length = ' ขนาด ' + data[_lengthKey] + ' เมตร';
+                _tempOrder['length'] = data[_lengthKey];
+              }
             });
 
             _tempOrder['name'] = _prod + length;
             _tempOrder['amount'] = data[_amountKey];
             _tempOrder['price'] = getProductPrice(prodType, _prod);
             _tempOrder['unit'] = getProductUnit(prodType, _prod);
+            _tempOrder['index'] = R.split('_', _amountKey)[2];
           }
         });
 

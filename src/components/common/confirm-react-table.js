@@ -89,7 +89,7 @@ const ConfirmTable = ({ columns, data }) => {
                       );
                     }
                     if (cell.column.id === 'total') {
-                      console.log('total');
+                      // console.log('total');
                       return (
                         <td
                           className="border-gray-900 px-4 py-2 border-t-4 border-b-4"
