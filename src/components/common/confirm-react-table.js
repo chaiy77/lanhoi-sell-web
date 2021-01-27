@@ -64,6 +64,7 @@ const ConfirmTable = ({ columns, data }) => {
                   }
 
                   if (row.original.type === 'product') {
+                    // console.log(cell.column, cell.column.id === 'total');
                     return (
                       <td
                         className="border px-4 py-2 "

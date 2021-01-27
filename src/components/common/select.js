@@ -2,7 +2,10 @@ import React, { forwardRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 const Select = forwardRef(
-  ({ options, onChange, name, register, defaultValue }, ref) => {
+  (
+    { options, onChange, name, register, defaultValue, defaultText, disabled },
+    ref
+  ) => {
     const [selectedValue, setSelectedValue] = useState(defaultValue);
 
     const handleChange = e => {
@@ -14,15 +17,16 @@ const Select = forwardRef(
     return (
       <div className="relative">
         <select
-          className="block appearance-none w-full bg-white border border-gray-400 
-        text-gray-700 py-1 px-4 pr-8 rounded leading-tight 
-        focus:outline-none focus:bg-white focus:border-gray-500"
+          className="block appearance-none w-full bg-white border border-gray-400
+          text-gray-700 py-1 px-4 pr-8 rounded leading-tight 
+          focus:outline-none focus:bg-white focus:border-gray-500"
           onChange={e => handleChange(e)}
           name={name}
           ref={register}
           value={selectedValue}
+          disabled={disabled}
         >
-          <option value="">select product</option>
+          <option value="">{defaultText}</option>
           {options.map((opt, idx) => (
             <option key={idx} value={opt} label={opt}>
               {opt}
@@ -47,15 +51,18 @@ Select.propTypes = {
   onChange: PropTypes.func,
   name: PropTypes.string,
   register: PropTypes.func,
-
+  defaultText: PropTypes.string,
   defaultValue: PropTypes.string,
+  disabled: PropTypes.bool,
 };
 Select.defaultProps = {
+  defaultText: 'select product',
   defaultValue: '',
   options: [1, 2, 3],
   onChange: () => {},
   name: 'defaultName',
   register: () => {},
+  disabled: false,
 };
 
 export default Select;

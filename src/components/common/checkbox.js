@@ -8,7 +8,6 @@ const Checkbox = forwardRef(
     display: block !important;
   }`;
     const handleClick = e => {
-      console.log(e.target.checked);
       onCheck(e.target.checked);
     };
 
@@ -23,6 +22,7 @@ const Checkbox = forwardRef(
               ref={register}
               defaultChecked={value}
               className="opacity-0 absolute"
+              onChange={e => handleClick(e)}
             />
             <svg
               className="fill-current hidden w-4 h-4 text-green-500 pointer-events-none"

@@ -14,12 +14,25 @@ const PileDataInput = forwardRef(
       'w-2/5 shadow appearance-none border rounded py-1 px-2 mx-5 ' +
       'text-gray-700 leading-tight focus:outline-none focus:shadow-outline';
 
+    const [hasDowel, setHasDowel] = useState(false);
+    const [hasShoe, setHasShoe] = useState(false);
+
+    const setDowel = e => {
+      setHasDowel(e);
+    };
+    const setShoe = e => {
+      setHasShoe(e);
+    };
+
     useEffect(() => {
       // console.log('set new roofValue', roofValue);
       // valueChange(i, roofValue);
       console.log('useEffect : ', pilesData);
       if (!R.isEmpty(pilesData)) {
         setValue('A_' + `${i}`, pilesData.data.A);
+        setValue('dowel_' + `${i}`, pilesData.data.dowel);
+        setValue('D1_' + `${i}`, pilesData.data.D1);
+        setDowel(pilesData.data.dowel);
       }
     }, [pilesData]);
 
@@ -49,6 +62,84 @@ const PileDataInput = forwardRef(
                   />
                   <div className="">ต้น</div>
                 </div>
+                <div className=" flex flex-wrap mt-3 ml-6 ">
+                  <Checkbox
+                    name={'dowel_' + `${i}`}
+                    register={register}
+                    value={hasDowel}
+                    onCheck={e => setDowel(e)}
+                  />
+                  <div className="flex flex-row">
+                    <div className="w-20">โดเวล :</div>
+                    {/* <div className="w-30">ขนาด </div>
+                    <input
+                      name={'D1_' + `${i}`}
+                      type="text"
+                      className="w-1/4 shadow appearance-none border rounded py-1 px-1 mx-2
+                    text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      disabled={!hasDowel}
+                      ref={
+                        !hasDowel
+                          ? register
+                          : register({
+                              validate: {
+                                positiveNumber: value => parseFloat(value) > 0,
+                              },
+                            })
+                      }
+                    />
+                    <div className="m-1/12 mr-6">มม. </div>
+
+                    <div className="w-10">ยาว </div>
+                    <input
+                      name={'D2_' + `${i}`}
+                      type="text"
+                      className="w-1/4 shadow appearance-none border rounded py-1 px-1 mx-2 mr-2
+                    text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      disabled={!hasDowel}
+                      ref={
+                        !hasDowel
+                          ? register
+                          : register({
+                              validate: {
+                                positiveNumber: value => parseFloat(value) > 0,
+                              },
+                            })
+                      }
+                    />
+                    <div className="m-1/12 mr-6">เมตร </div>
+                  </div> */}
+                    {/* <div className="flex flex-row"> */}
+                    <div className="w-15 mr-2">จำนวน </div>
+                    <input
+                      name={'D1_' + `${i}`}
+                      type="text"
+                      className="w-1/4 shadow appearance-none border rounded py-1 px-1 mx-2 mr-2
+                    text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      disabled={!hasDowel}
+                      defaultValue={pilesData.data.D1}
+                      ref={
+                        !hasDowel
+                          ? register
+                          : register({
+                              validate: {
+                                positiveNumber: value => parseFloat(value) > 0,
+                              },
+                            })
+                      }
+                    />
+                    <div className="ml-4">เส้น </div>
+                  </div>
+                </div>
+                <div className=" flex flex-row  mt-3 ml-6 ">
+                  <Checkbox
+                    name={'shoe_' + `${i}`}
+                    register={register}
+                    value={hasShoe}
+                    onCheck={e => setShoe(e)}
+                  />
+                  <div className="w-20">หัวชู </div>
+                </div>
               </div>
             </div>
           </div>
@@ -64,7 +155,6 @@ PileDataInput.propsType = {
   pilesData: PropTypes.object,
   setValue: PropTypes.func,
 };
-
 PileDataInput.defaultProps = {
   i: 1,
   register: () => {},

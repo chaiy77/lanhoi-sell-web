@@ -13,7 +13,12 @@ const columns = [
     Header: 'No',
     accessor: 'no',
   },
-  { Header: 'รายการ', accessor: 'product' },
+  {
+    Header: 'รายการ',
+    accessor: 'product',
+    //use "dangerouslySetInnerHTML" for html tag in cell
+    Cell: row => <div dangerouslySetInnerHTML={{ __html: row.value }} />,
+  },
   {
     Header: 'จำนวน',
     accessor: 'amount',
@@ -63,7 +68,7 @@ const mOrder = orders => {
         console.log(area);
         area.products.map(prod => {
           _idx = _idx + 1;
-          //console.log(prod.index);
+          console.log(prod.index);
           if (prod.index === 'Metalsheet') {
             // console.log('index = metalsheet');
             _data.push({
@@ -72,13 +77,31 @@ const mOrder = orders => {
               amount: prod.amount,
               price: Math.floor(prod.price * prod.length),
               unit: prod.unit,
-              total: prod.price * prod.amount,
+              total: prod.price * prod.length * prod.amount,
               type: 'product',
             });
-          } else {
+          } else if (prod.index === 'slab') {
+            console.log('index = slab');
+            console.log(prod);
+
             _data.push({
               no: _idx,
               product: prod.name,
+              amount: prod.amount,
+              price: Math.floor(prod.price * prod.length),
+              unit: prod.unit,
+              total: prod.price * prod.length * prod.amount,
+              type: 'product',
+            });
+          } else if (prod.index === '') {
+          } else {
+            _data.push({
+              no: _idx,
+              product:
+                prod.name +
+                '<br> <div style="padding-left:8px; font-size:0.8em"> -' +
+                prod.addon +
+                '</div>',
               amount: prod.amount,
               price: prod.price,
               unit: prod.unit,

@@ -64,12 +64,23 @@ const ProductGroups = [
     path: 'pile',
     groups: [
       {
-        index: 'เสาเข็มคอนกรีต',
+        index: 'pile',
         text: 'เสาเข็มคอนกรีต',
         unit: 'ต้น',
         products: [
+          { name: 'เสาเข็มคอนกรีต 4 M มีหัวชู ', price: 1400 },
+          { name: 'เสาเข็มคอนกรีต 6 M มีหัวชู', price: 1600 },
           { name: 'เสาเข็มคอนกรีต 4 M', price: 1200 },
-          { name: 'เสาเข็มคอนกรีต 6 M', price: 1000 },
+          { name: 'เสาเข็มคอนกรีต 6 M', price: 1400 },
+        ],
+      },
+      {
+        index: 'dowel',
+        text: 'โดเวล',
+        unit: 'เส้น',
+        products: [
+          { name: 'โดเวล ขนาด \u2205 1" ยาว 10"', price: 1200 },
+          { name: 'โดเวล ขนาด \u2205 1/2" ยาว 10"', price: 1000 },
         ],
       },
     ],
@@ -80,16 +91,12 @@ const ProductGroups = [
     path: 'slab',
     groups: [
       {
-        index: 'แผ่นพื้นคอนกรีต',
+        index: 'slab',
         text: 'แผ่นพื้นคอนกรีต',
         unit: 'แผ่น',
         products: [
-          { name: 'แผ่นพื้นคอนกรีต 1.0 m/4 lines', long: 1.0, price: 400 },
-          { name: 'แผ่นพื้นคอนกรีต 1.0 m/6 lines', long: 1.0, price: 450 },
-          { name: 'แผ่นพื้นคอนกรีต 1.5 m/4 lines', long: 1.5, price: 400 },
-          { name: 'แผ่นพื้นคอนกรีต 1.5 m/6 lines', long: 1.5, price: 450 },
-          { name: 'แผ่นพื้นคอนกรีต 2.0 m/4 lines', long: 2.0, price: 400 },
-          { name: 'แผ่นพื้นคอนกรีต 2.0 m/6 lines', long: 2.0, price: 450 },
+          { name: '4 เส้น', price: 150 }, //price per meter.
+          { name: '6 เส้ร', price: 200 },
         ],
       },
     ],
@@ -143,12 +150,12 @@ const ProductGroups = [
 
 const RoofTypes = [
   { name: 'type A', needA: true, needB: true, needC: false },
-  { name: 'type B', needA: true, needB: true, needC: true },
-  { name: 'type C', needA: true, needB: true, needC: true },
+  { name: 'type B', needA: true, needB: true, needC: false },
+  { name: 'type C', needA: true, needB: true, needC: false },
   { name: 'type D', needA: true, needB: true, needC: false },
-  { name: 'type E', needA: true, needB: true, needC: false },
-  { name: 'type F', needA: true, needB: true, needC: false },
-  { name: 'type G', needA: true, needB: true, needC: false },
+  // { name: 'type E', needA: true, needB: true, needC: false },
+  // { name: 'type F', needA: true, needB: true, needC: false },
+  // { name: 'type G', needA: true, needB: true, needC: false },
 ];
 
 const concreteUseType = [
@@ -184,8 +191,8 @@ const MockOrders = {
 
 const getProductPrice = (productType, productName) => {
   const _prodGroup = R.find(R.propEq('type', productType))(ProductGroups);
-  console.log(_prodGroup);
-  console.log(productType);
+  // console.log(_prodGroup);
+  // console.log(productType);
   let price = 0;
   _prodGroup.groups.map(group => {
     // console.log(group);

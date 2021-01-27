@@ -41,8 +41,9 @@ const SlabProductDetail = forwardRef(
           _slabTypes = group.products.filter(_s => _s.long === long);
         }
       });
-      // console.log(_slabTypes);
-      let result = _slabTypes.map(_s => {
+      console.log(_slabTypes);
+      console.log(Groups.groups);
+      let result = Groups.groups.products.map(_s => {
         return _s.name;
       });
       // console.log(result);
@@ -73,9 +74,22 @@ const SlabProductDetail = forwardRef(
         <div className="border border-gray-500  rounded-b-md">
           {Groups.groups.map((group, i) => {
             return (
-              <div className="flex flex-row my-2 py-2 px-4 " key={i}>
-                <div className="w-1/6"> {group.text} </div>
-                <div className="w-3/6 mx-3 ">
+              <div
+                className="flex flex-row my-2 py-2 px-4 items-center "
+                key={i}
+              >
+                <div className="w-3/12"> {group.text} </div>
+                <div className="w-1/12"> ยาว </div>
+                <div className="w-1/12">
+                  <TextInput
+                    name={`${area.no}` + '_length_' + `${group.index}`}
+                    register={register}
+                    defaultValue={area.data.B}
+                  />
+                </div>
+                <div className="w-1/12 "> เมตร </div>
+                <div className="w-1/6"> จำนวนเหล็กเส้น </div>
+                <div className="w-3/12 mx-3 ">
                   <Select
                     name={`${area.no}` + '_product_' + `${group.index}`}
                     register={register({
@@ -83,10 +97,11 @@ const SlabProductDetail = forwardRef(
                         notEmpty: value => value !== '',
                       },
                     })}
-                    options={getSlabProductType(area.data.B)}
+                    defaultText="จำนวนเหล็กเส้น"
+                    options={group.products.map(i => i.name)}
                   />
                 </div>
-                <div className=" w-1/6 mx-3">
+                <div className=" w-1/12 mx-3">
                   <TextInput
                     name={`${area.no}` + '_amount_' + `${group.index}`}
                     register={register}
@@ -149,12 +164,24 @@ const PreQuatation = ({ slabs, addOrder }) => {
 
         R.keys(data).map(_amountKey => {
           let _noUnit = parseInt(R.split('_', _amountKey)[0]);
+          let length = '';
           if (
             R.contains('amount', _amountKey) &&
             R.contains(_pGroup, _amountKey) &&
             _noProd === _noUnit
           ) {
-            _tempOrder['name'] = _prod;
+            R.keys(data).map(_lengthKey => {
+              if (
+                R.contains('length', _lengthKey) &&
+                R.contains(_pGroup, _lengthKey) &&
+                R.contains(_noUnit, _lengthKey)
+              ) {
+                length = ' ขนาด ' + data[_lengthKey] + ' เมตร ';
+                _tempOrder['length'] = data[_lengthKey];
+              }
+            });
+
+            _tempOrder['name'] = length + ' เหล็ก ' + _prod;
             _tempOrder['amount'] = data[_amountKey];
             _tempOrder['price'] = getProductPrice(prodType, _prod);
             _tempOrder['unit'] = getProductUnit(prodType, _prod);
