@@ -8,7 +8,10 @@ import { actions } from 'data/reducers/customer';
 import { useForm, Controller } from 'react-hook-form';
 import { Button, Select, Checkbox } from 'components/common';
 import { navigate } from 'gatsby';
-import { concreteUseType } from 'data/mockup-data';
+import { concreteUseType, ProductGroups } from 'data/mockup-data';
+
+const GroupName = 'Concrete';
+const Groups = R.find(R.propEq('type', GroupName))(ProductGroups);
 
 const AreaDataInput = forwardRef(
   ({ i, valueChange, register, areaData, setValue }, ref) => {
@@ -247,9 +250,14 @@ const ConcreteDataComponent = ({ areaData, setConcreteData }) => {
           <div className="sm:w-full md:w-5/6 xl:w-1/2">
             <form onSubmit={handleSubmit(handleNext)}>
               <div className="flex flex-row justify-between">
-                <div className="text-gray-700 text-sm font-bold ">
-                  CustomerData
+                <div>
+                  <Button
+                    onClick={() => navigate('/products')}
+                    type="button"
+                    label="Back"
+                  />
                 </div>
+                <div className="flex items-center text-3xl">{Groups.text}</div>
                 <div className="flex w-auto">
                   <Button type="submit" label="Next" />
                 </div>

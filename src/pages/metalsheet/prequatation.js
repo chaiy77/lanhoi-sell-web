@@ -15,7 +15,7 @@ import { actions } from 'data/reducers/order';
 import { Metalsheet } from 'util/calculator';
 
 //Groups need to be loaded from DB, created by admin
-const GroupName = 'เมทัลชีท';
+const GroupName = 'Metalsheet';
 const Groups = R.find(R.propEq('type', GroupName))(ProductGroups);
 
 const RoofProductDetail = forwardRef(

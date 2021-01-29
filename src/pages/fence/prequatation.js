@@ -15,7 +15,7 @@ import {
 import { Fence } from 'util/calculator';
 
 //Groups need to be loaded from DB, created by admin
-const GroupName = 'รั้วคอนกรีต';
+const GroupName = 'Fence';
 const Groups = R.find(R.propEq('type', GroupName))(ProductGroups);
 
 const FenceProductDetail = forwardRef(
@@ -29,9 +29,9 @@ const FenceProductDetail = forwardRef(
 
       let result = 0;
       if (group.index === 'แผ่นรั้ว')
-        result = Fence.getFenceSheets(area.data.B, area.data.A);
+        result = Fence.getFenceSheets(area.data.B, area.data.A, area.data.beam);
       if (group.index === 'เสารั้ว')
-        result = Fence.getFenceColumns(area.data.A);
+        result = Fence.getFenceColumns(area.data.A, area.data.join);
       console.log(result);
       return result;
     };

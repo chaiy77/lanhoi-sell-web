@@ -15,7 +15,7 @@ import {
 import { RetainingWall } from 'util/calculator';
 
 //Groups need to be loaded from DB, created by admin
-const GroupName = 'กำแพงกันดิน';
+const GroupName = 'Retainingwall';
 const Groups = R.find(R.propEq('type', GroupName))(ProductGroups);
 
 const WallProductDetail = forwardRef(
@@ -35,7 +35,9 @@ const WallProductDetail = forwardRef(
         <div className="flex  border border-gray-500 bg-blue-400 p-2 rounded-t-md">
           <div className="flex flex-col">
             <div className="flex flex-row">
-              <div className="mx-2 text-2xl font-bold">Area No. {area.no} </div>
+              <div className="mx-2 text-2xl font-bold">
+                กำแพงด้านที่ {area.no}{' '}
+              </div>
             </div>
           </div>
         </div>
@@ -162,7 +164,7 @@ const WallPreQuatation = ({ areas, addOrder }) => {
                   label="Back"
                 />
               </div>
-              <div className="flex items-center text-3xl">รั้วกันดิน</div>
+              <div className="flex items-center text-3xl">{Groups.text}</div>
               <div className="flex w-auto">
                 <Button type="button" label="Next" />
               </div>

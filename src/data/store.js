@@ -6,6 +6,7 @@ import rootReducer from './reducers';
 
 export default function configureStore() {
   let store = '';
+  console.log('call redux configureStore');
   if (typeof window !== 'undefined') {
     // https://github.com/zalmoxisus/redux-devtools-extension
     store = createStore(

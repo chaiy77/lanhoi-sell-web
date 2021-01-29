@@ -161,6 +161,7 @@ const PilePreQuatation = ({ areas, addOrder }) => {
     // console.log(' add cart click');
     // console.log(data);
     let prodType = Groups.type;
+    let prodText = Groups.text;
     let _tempOrder = {};
     let _orders = [];
     let _areas = [...areaData];
@@ -241,10 +242,10 @@ const PilePreQuatation = ({ areas, addOrder }) => {
       }
       //console.log('_order :', _orders);
     });
-    let order = { group: GroupName, areas: _orders };
-    // console.log(order);
-    addOrder(order);
-    navigate('confirmorder');
+    let order = { group: GroupName, areas: _orders, text: prodText };
+    console.log(order);
+    //addOrder(order);
+    //navigate('confirmorder');
   };
 
   return (

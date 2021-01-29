@@ -11,6 +11,11 @@ import { actions } from 'data/reducers/customer';
 import { RoofTypes } from 'data/mockup-data';
 import lanhoi from 'images/lanhoi.png';
 
+import { ProductGroups } from 'data/mockup-data';
+
+const GroupName = 'Metalsheet';
+const Groups = R.find(R.propEq('type', GroupName))(ProductGroups);
+
 const RoofDataIput = forwardRef(
   ({ i, valueChange, register, roofData, setValue }, ref) => {
     const [needA, setNeedA] = useState(true);
@@ -368,9 +373,14 @@ const CustomerData = ({ setRoofArea, roofDatas }) => {
           <div className="sm:w-full md:w-5/6 xl:w-1/2">
             <form onSubmit={handleSubmit(handleNext)}>
               <div className="flex flex-row justify-between">
-                <div className="text-gray-700 text-sm font-bold ">
-                  CustomerData
+                <div>
+                  <Button
+                    onClick={() => navigate('/products')}
+                    type="button"
+                    label="Back"
+                  />
                 </div>
+                <div className="flex items-center text-3xl">{Groups.text}</div>
                 <div className="flex w-auto">
                   <Button type="submit" label="Next" />
                 </div>

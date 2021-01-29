@@ -9,7 +9,8 @@ import { string } from 'prop-types';
 
 const ProductGroups = [
   {
-    type: 'เมทัลชีท',
+    type: 'Metalsheet',
+    text: 'หลังคาเมทัลชีท',
     path: 'metalsheet',
     groups: [
       {
@@ -45,6 +46,7 @@ const ProductGroups = [
   },
   {
     type: 'Concrete',
+    text: 'คอนกรีต',
     path: 'concrete',
     groups: [
       {
@@ -61,6 +63,7 @@ const ProductGroups = [
   },
   {
     type: 'Pile',
+    text: 'เสาเข็มคอนกรีต',
     path: 'pile',
     groups: [
       {
@@ -88,6 +91,7 @@ const ProductGroups = [
   },
   {
     type: 'Slab',
+    text: 'แผ่นพื้นคอนกรีต',
     path: 'slab',
     groups: [
       {
@@ -103,7 +107,8 @@ const ProductGroups = [
     image: slabImage,
   },
   {
-    type: 'รั้วคอนกรีต',
+    type: 'Fence',
+    text: 'รั้วคอนกรีต',
     path: 'fence',
     groups: [
       {
@@ -125,23 +130,30 @@ const ProductGroups = [
     image: fenceImage,
   },
   {
-    type: 'กำแพงกันดิน',
+    type: 'Retainingwall',
+    text: 'กำแพงกันดิน',
     path: 'retainingwall',
     groups: [
       {
-        index: 'แผ่นรั้ว',
-        text: 'แผ่นรั้ว',
+        index: 'แผ่นคอนกรีต',
+        text: 'แผ่นคอนกรีต',
         unit: 'แผ่น',
         products: [
           { name: 'แผ่นคอนกรีต 1.5 m / 4 lines', price: 150 },
-          { name: 'แผ่นคอนกรีต 1.5 m / 6 lines', price: 150 },
+          { name: 'แผ่นคอนกรีต 1.5 m / 6 lines', price: 150 }, //price per piece
         ],
       },
       {
-        index: 'เสารั้ว',
-        text: 'เสารั้ว',
+        index: 'เสาคอนกรีต',
+        text: 'เสาคอนกรีต',
         unit: 'ต้น',
-        products: [{ name: 'เสารั้ว 1.5 m', price: 400 }],
+        products: [{ name: 'เสาคอนกรีต สูง 1.5 m', price: 400 }], //price per meter per piece
+      },
+      {
+        index: 'คานคอนดิน',
+        text: 'คานคอดิน',
+        unit: 'เมตร',
+        products: [{ name: 'คานคอดิน หน้าตัด 18 cm.', price: 555 }], //price per meter
       },
     ],
     image: fenceImage,

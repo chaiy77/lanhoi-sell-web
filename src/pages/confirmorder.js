@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import Layout from '../components/layout';
 import { ConfirmTable, ConfirmReactTable, Button } from 'components/common';
 import lanhoi from 'images/lanhoi.png';
-import { MockOrders } from 'data/mockup-data';
+import { ProductGroups } from 'data/mockup-data';
 
 const columns = [
   {
@@ -52,17 +52,19 @@ const mOrder = orders => {
     //Add Product group to table's data
 
     if (R.has('areas', _mOrder[group])) {
+      let groupText = R.find(R.propEq('type', group))(ProductGroups).text;
+      // console.log(groupText);
       _mOrder[group]['areas'].map(area => {
         area.type
           ? _data.push({
               no: '',
               product:
-                `${group}` + ' : No ' + `${area.no}` + ' ' + `${area.type}`,
+                `${groupText}` + ' : No ' + `${area.no}` + ' ' + `${area.type}`,
               type: 'group',
             })
           : _data.push({
               no: '',
-              product: `${group}` + ' : No ' + `${area.no}`,
+              product: `${groupText}` + ' : No ' + `${area.no}`,
               type: 'group',
             });
         console.log(area);
@@ -95,13 +97,17 @@ const mOrder = orders => {
             });
           } else if (prod.index === '') {
           } else {
+            let _pName =
+              typeof prod.addon !== 'undefined'
+                ? prod.name +
+                  '<br> <div style="padding-left:8px; font-size:0.8em"> -' +
+                  prod.addon +
+                  '</div>'
+                : prod.name;
             _data.push({
               no: _idx,
-              product:
-                prod.name +
-                '<br> <div style="padding-left:8px; font-size:0.8em"> -' +
-                prod.addon +
-                '</div>',
+              product: _pName,
+
               amount: prod.amount,
               price: prod.price,
               unit: prod.unit,
