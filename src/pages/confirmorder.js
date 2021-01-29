@@ -141,10 +141,25 @@ const ConfirmOrderPage = ({ orders }) => {
     setOrderData(mOrder(orders));
   }, [orders]);
 
+  // https://github.com/niklasvh/html2canvas/issues/1878
   const printDocument = domElement => {
-    html2canvas(domElement).then(canvas => {
-      document.body.appendChild(canvas);
-    });
+    html2canvas(domElement, {
+      scrollX: 0,
+      scrollY: -window.scrollY,
+    })
+      .then(canvas => document.body.appendChild(canvas))
+      .then(canvas => {
+        var link = document.createElement('a');
+        link.href = canvas.toDataURL();
+        link.download = '1.jpg';
+        document.body.appendChild(link);
+
+        //simulate click
+        link.click();
+
+        //remove the link when done
+        document.body.removeChild(link);
+      });
   };
 
   return (
@@ -154,7 +169,7 @@ const ConfirmOrderPage = ({ orders }) => {
           // <ConfirmTable />
           <div className="sm:w-full md:w-5/6 xl:w-1/2">
             <div>Product List</div>
-            <div className="w-full mt-5" ref={orderTableRef}>
+            <div className="w-full mt-5" id="id-orderTable">
               <ConfirmReactTable columns={columns} data={orderData} />
             </div>
             <div className="flex flex-row mt-5 justify-between">
@@ -166,8 +181,10 @@ const ConfirmOrderPage = ({ orders }) => {
               </div>
               <div className="w-1/4">
                 <Button
-                  label="Next"
-                  onClick={() => printDocument(orderTableRef.current)}
+                  label="Save"
+                  onClick={() =>
+                    printDocument(document.getElementById('id-orderTable'))
+                  }
                 ></Button>
               </div>
             </div>
