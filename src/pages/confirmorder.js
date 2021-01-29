@@ -147,7 +147,7 @@ const ConfirmOrderPage = ({ orders }) => {
       scrollX: 0,
       scrollY: -window.scrollY,
     })
-      .then(canvas => document.body.appendChild(canvas))
+      // .then(canvas => document.body.appendChild(canvas))
       .then(canvas => {
         var link = document.createElement('a');
         link.href = canvas.toDataURL();

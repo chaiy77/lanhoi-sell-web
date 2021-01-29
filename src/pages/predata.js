@@ -2,14 +2,18 @@
 import React from 'react';
 import { navigate } from 'gatsby';
 import { useForm } from 'react-hook-form';
+import { ErrorMessage } from '@hookform/error-message';
 import Layout from '../components/layout';
 
 const PreData = () => {
-  const { register, handleSubmit, setValue, watch, errors } = useForm();
+  const { register, handleSubmit, setValue, watch, errors } = useForm({
+    criteriaMode: 'all',
+  });
 
   const submit = data => {
-    console.log('login');
-    navigate('products');
+    console.log(data);
+    if (errors);
+    // navigate('products');
   };
 
   return (
@@ -25,7 +29,11 @@ const PreData = () => {
                   name="name"
                   id="name"
                   placeholder="ชื่อ-นามสกุล"
-                  ref={register}
+                  ref={register({
+                    validate: {
+                      notEmpty: value => value !== '',
+                    },
+                  })}
                   className="shadow appearance-none border rounded py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
                 />
               </div>
@@ -46,9 +54,20 @@ const PreData = () => {
                 <input
                   name="mobile"
                   id="mobile"
-                  ref={register}
+                  ref={register({
+                    required: true,
+                    pattern: {
+                      value: /^[0][1-9]{2}[-]{0,1}[0-9]{7}$/g,
+                      message:
+                        'phone number is invalid -> ex.088-8888888 or 088-888-8888',
+                    },
+                  })}
+                  placeholder="0xx-xxxxxxx"
                   className="shadow appearance-none border rounded  py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"
                 />
+                <div className="red">
+                  <ErrorMessage name="mobile" errors={errors} />
+                </div>
               </div>
 
               <input
