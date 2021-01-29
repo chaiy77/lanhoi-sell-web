@@ -1,12 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import * as R from 'ramda';
 import { Link, navigate } from 'gatsby';
+import html2canvas from 'html2canvas';
 import { connect } from 'react-redux';
 import Layout from '../components/layout';
 import { ConfirmTable, ConfirmReactTable, Button } from 'components/common';
 import lanhoi from 'images/lanhoi.png';
 import { ProductGroups } from 'data/mockup-data';
+
+//use html2canvas to save + download image
+//https://stackoverflow.com/questions/44343931/save-image-with-html2canvas-pure-javascript
+//https://stackoverflow.com/questions/61187850/export-html-area-as-image-with-html2canvas
 
 const columns = [
   {
@@ -129,10 +134,18 @@ const mOrder = orders => {
 
 const ConfirmOrderPage = ({ orders }) => {
   const [orderData, setOrderData] = useState([]);
+  const orderTableRef = useRef();
+
   useEffect(() => {
     console.log('order list :', { orders });
     setOrderData(mOrder(orders));
   }, [orders]);
+
+  const printDocument = domElement => {
+    html2canvas(domElement).then(canvas => {
+      document.body.appendChild(canvas);
+    });
+  };
 
   return (
     <Layout
@@ -141,7 +154,7 @@ const ConfirmOrderPage = ({ orders }) => {
           // <ConfirmTable />
           <div className="sm:w-full md:w-5/6 xl:w-1/2">
             <div>Product List</div>
-            <div className="w-full mt-5">
+            <div className="w-full mt-5" ref={orderTableRef}>
               <ConfirmReactTable columns={columns} data={orderData} />
             </div>
             <div className="flex flex-row mt-5 justify-between">
@@ -152,7 +165,10 @@ const ConfirmOrderPage = ({ orders }) => {
                 ></Button>
               </div>
               <div className="w-1/4">
-                <Button label="Next"></Button>
+                <Button
+                  label="Next"
+                  onClick={() => printDocument(orderTableRef.current)}
+                ></Button>
               </div>
             </div>
           </div>

@@ -244,8 +244,8 @@ const PilePreQuatation = ({ areas, addOrder }) => {
     });
     let order = { group: GroupName, areas: _orders, text: prodText };
     console.log(order);
-    //addOrder(order);
-    //navigate('confirmorder');
+    addOrder(order);
+    navigate('confirmorder');
   };
 
   return (
