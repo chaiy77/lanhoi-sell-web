@@ -13,7 +13,7 @@ const types = {
 };
 
 export const actions = {
-  setCustomer: customer => payloadAction(types.SET_CUSTOMER)(customer),
+  setCustomer: data => payloadAction(types.SET_CUSTOMER)(data),
   setRoof: roofAreas => payloadAction(types.SET_ROOF)(roofAreas),
   setPile: piles => payloadAction(types.SET_PILE)(piles),
   setConcrete: areas => payloadAction(types.SET_CONCRETE)(areas),
@@ -36,7 +36,7 @@ const initialState = {
   //   Fence:[{no:1,long:10,height:5},{no:2,long:20,height:5}],
   //   GroundWall:[{no:1,long:10,height:5},{no:2,long:20,height:5}]
   // }
-  customer: {},
+  // customer: {},
 };
 
 const reducers = [

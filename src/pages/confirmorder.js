@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import * as R from 'ramda';
+import moment from 'moment';
 import { Link, navigate } from 'gatsby';
 import html2canvas from 'html2canvas';
 import { connect } from 'react-redux';
@@ -132,12 +133,13 @@ const mOrder = orders => {
   return _data;
 };
 
-const ConfirmOrderPage = ({ orders }) => {
+const ConfirmOrderPage = ({ orders, customer }) => {
   const [orderData, setOrderData] = useState([]);
   const orderTableRef = useRef();
 
   useEffect(() => {
     console.log('order list :', { orders });
+    console.log('customer :', customer);
     setOrderData(mOrder(orders));
   }, [orders]);
 
@@ -146,20 +148,19 @@ const ConfirmOrderPage = ({ orders }) => {
     html2canvas(domElement, {
       scrollX: 0,
       scrollY: -window.scrollY,
-    })
-      // .then(canvas => document.body.appendChild(canvas))
-      .then(canvas => {
-        var link = document.createElement('a');
-        link.href = canvas.toDataURL();
-        link.download = '1.jpg';
-        document.body.appendChild(link);
+    }).then(canvas => document.body.appendChild(canvas));
+    // .then(canvas => {
+    //   var link = document.createElement('a');
+    //   link.href = canvas.toDataURL();
+    //   link.download = '1.jpg';
+    //   document.body.appendChild(link);
 
-        //simulate click
-        link.click();
+    //   //simulate click
+    //   link.click();
 
-        //remove the link when done
-        document.body.removeChild(link);
-      });
+    //   //remove the link when done
+    //   document.body.removeChild(link);
+    // });
   };
 
   return (
@@ -167,9 +168,42 @@ const ConfirmOrderPage = ({ orders }) => {
       renderContent={() => {
         return (
           // <ConfirmTable />
-          <div className="sm:w-full md:w-5/6 xl:w-1/2">
-            <div>Product List</div>
-            <div className="w-full mt-5" id="id-orderTable">
+          <div className="sm:w-full md:w-5/6 xl:w-1/2 " id="id-orderTable">
+            <div className="w-full flex border-b-2 border-gray-600">
+              <div className="w-full flex text-2xl justify-center my-4  ">
+                รายการสินค้า
+              </div>
+            </div>
+            <div className="w-full flex  justify-end">
+              <div className="flex flex-col">
+                <div className="flex flex-row items-end mt-4 ml-4">
+                  <div className="w-16 font-bold ">วันที่</div>
+                  <div className="w-full text-lg">
+                    {moment().locale('th').add(543, 'year').format('LL')}
+                  </div>
+                </div>
+                <div className="flex flex-row items-end  ml-4">
+                  <div className="w-16 font-bold ">เวลา</div>
+                  <div className="w-full text-lg">
+                    {moment().locale('th').format('LTS')}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="w-full flex flex-row items-end ml-4">
+              <div className="w-32 font-bold ">ชื่อลูกค้า</div>
+              <div className="w-full text-lg"> {customer.name}</div>
+            </div>
+            <div className="w-full flex flex-row items-end mt-2  ml-4">
+              <div className="w-32 font-medium">ที่อยู่</div>
+              <div className="w-full text-lg"> {customer.address}</div>
+            </div>
+            <div className="w-full flex flex-row items-end mt-2  ml-4">
+              <div className="w-32 font-medium">เบอร์โทรศัพท์</div>
+              <div className="w-full text-lg"> {customer.phone}</div>
+            </div>
+            <div className="w-full mt-5">
               <ConfirmReactTable columns={columns} data={orderData} />
             </div>
             <div className="flex flex-row mt-5 justify-between">
@@ -197,10 +231,14 @@ const ConfirmOrderPage = ({ orders }) => {
 
 ConfirmOrderPage.propsTypes = {
   orders: PropTypes.array,
+  customer: PropTypes.object,
 };
 
-ConfirmOrderPage.defaultProps = { orders: [] };
+ConfirmOrderPage.defaultProps = { orders: [], customer: {} };
 
-const mapStateToProps = state => ({ orders: state.Orders });
+const mapStateToProps = state => ({
+  orders: state.Orders,
+  customer: state.Customer.data,
+});
 
 export default connect(mapStateToProps)(ConfirmOrderPage);
