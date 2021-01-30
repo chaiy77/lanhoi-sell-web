@@ -148,19 +148,20 @@ const ConfirmOrderPage = ({ orders, customer }) => {
     html2canvas(domElement, {
       scrollX: 0,
       scrollY: -window.scrollY,
-    }).then(canvas => document.body.appendChild(canvas));
-    // .then(canvas => {
-    //   var link = document.createElement('a');
-    //   link.href = canvas.toDataURL();
-    //   link.download = '1.jpg';
-    //   document.body.appendChild(link);
+    })
+      // .then(canvas => document.body.appendChild(canvas));
+      .then(canvas => {
+        var link = document.createElement('a');
+        link.href = canvas.toDataURL();
+        link.download = '1.jpg';
+        document.body.appendChild(link);
 
-    //   //simulate click
-    //   link.click();
+        //simulate click
+        link.click();
 
-    //   //remove the link when done
-    //   document.body.removeChild(link);
-    // });
+        //remove the link when done
+        document.body.removeChild(link);
+      });
   };
 
   return (
