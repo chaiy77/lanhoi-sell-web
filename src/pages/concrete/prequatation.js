@@ -7,7 +7,11 @@ import * as R from 'ramda';
 import Layout from 'components/layout';
 import PropTypes from 'prop-types';
 import { Select, TextInput, Button } from 'components/common';
-import { ProductGroups } from 'data/mockup-data';
+import {
+  ProductGroups,
+  getProductPrice,
+  getProductUnit,
+} from 'data/mockup-data';
 import { Concrete } from 'util/calculator';
 
 //Groups need to be loaded from DB, created by admin
@@ -61,15 +65,19 @@ const ConcreteProductDetail = forwardRef(
                 <div className="w-3/6 mx-3 ">
                   <Select
                     name={`${area.no}` + '_product_' + `${group.index}`}
-                    register={register}
+                    register={register({
+                      validate: {
+                        notEmpty: value => value !== '',
+                      },
+                    })}
                     options={group.products.map(i => i.name)}
                   />
                 </div>
                 <div className=" w-1/6 mx-3">
                   <TextInput
-                    name={`${area.no}` + '_unit_' + `${group}`}
+                    name={`${area.no}` + '_amount_' + `${group.index}`}
                     register={register}
-                    defaultValue={ItemCalculation(area, group)}
+                    defaultValue={ItemCalculation(area, group.index)}
                   />
                 </div>
                 <div className="w-1/6"> คิว</div>
@@ -88,6 +96,7 @@ const ConcreteProductDetail = forwardRef(
 
 const ConcretePreQuatation = ({ areas, addOrder }) => {
   const [areaData, setRoofsData] = useState([]);
+  // @ts-ignore
   const { register, handleSubmit, watch, errors } = useForm();
 
   useEffect(() => {
@@ -97,7 +106,8 @@ const ConcretePreQuatation = ({ areas, addOrder }) => {
   const addToCartClick = data => {
     console.log(' add cart click');
     console.log(data);
-    let prodType = Groups.groups;
+    // @ts-ignore
+    let prodType = Groups.type;
     let _tempOrder = {};
     let _orders = [];
     let _areas = [...areaData];
@@ -107,9 +117,10 @@ const ConcretePreQuatation = ({ areas, addOrder }) => {
 
     R.keys(data).map(key => {
       _no = parseInt(key.substring(0, key.indexOf('_')));
-      _areas.map(area =>
-        parseInt(area.no) === _no ? (_type = area.type) : ''
-      );
+      _areas.map(area => {
+        console.log(area);
+        parseInt(area.no) === _no ? (_type = area.type) : '';
+      });
       let _temp = { no: _no, type: _type, products: [] };
       if (!R.contains(_temp, _orders)) _orders.push(_temp);
     });
@@ -122,14 +133,18 @@ const ConcretePreQuatation = ({ areas, addOrder }) => {
 
         _prod = data[_prodKey];
 
-        R.keys(data).map(_unitKey => {
-          let _noUnit = parseInt(R.split('_', _unitKey)[0]);
+        R.keys(data).map(_amountKey => {
+          let _noUnit = parseInt(R.split('_', _amountKey)[0]);
           if (
-            R.contains('unit', _unitKey) &&
-            R.contains(_pGroup, _unitKey) &&
+            R.contains('amount', _amountKey) &&
+            R.contains(_pGroup, _amountKey) &&
             _noProd === _noUnit
           ) {
-            _tempOrder[_prod] = data[_unitKey];
+            _tempOrder['name'] = _prod;
+            _tempOrder['amount'] = data[_amountKey];
+            _tempOrder['price'] = getProductPrice(prodType, _prod);
+            _tempOrder['unit'] = getProductUnit(prodType, _prod);
+            _tempOrder['index'] = R.split('_', _amountKey)[2];
           }
         });
 
@@ -138,7 +153,7 @@ const ConcretePreQuatation = ({ areas, addOrder }) => {
             _orders[i]['products'].push(_tempOrder);
           }
         });
-        // console.log(_orders);
+        console.log(_orders);
       }
     });
     let order = { group: GroupName, areas: _orders };
@@ -171,6 +186,7 @@ const ConcretePreQuatation = ({ areas, addOrder }) => {
                   {areaData.map((area, area_index) => {
                     return (
                       <ConcreteProductDetail
+                        // @ts-ignore
                         area={area}
                         area_index={area_index}
                         register={register}

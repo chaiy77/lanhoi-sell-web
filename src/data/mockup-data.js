@@ -3,11 +3,14 @@ import fenceImage from 'images/fence.jpg';
 import pileImage from 'images/pile.jpg';
 import concreteImage from 'images/concrete.jpg';
 import slabImage from 'images/slab.jpg';
+import * as R from 'ramda';
+
 import { string } from 'prop-types';
 
 const ProductGroups = [
   {
-    type: 'เมทัลชีท',
+    type: 'Metalsheet',
+    text: 'หลังคาเมทัลชีท',
     path: 'metalsheet',
     groups: [
       {
@@ -15,9 +18,9 @@ const ProductGroups = [
         text: 'แผ่นเมทัลชีท',
         unit: 'แผ่น',
         products: [
-          { name: 'LH/แดง/0.5', price: 60 },
-          { name: 'LH/เขียว/0.5', price: 60 },
-          { name: 'LH/โปร่งแสง/0.5', price: 150 },
+          { name: 'แผ่นเมทัลชีท LH/แดง/0.5', price: 60 },
+          { name: 'แผ่นเมทัลชีท LH/เขียว/0.5', price: 60 },
+          { name: 'แผ่นเมทัลชีท LH/โปร่งแสง/0.5', price: 150 },
         ],
       },
       {
@@ -25,8 +28,8 @@ const ProductGroups = [
         text: 'สกรู',
         unit: 'ตัว',
         products: [
-          { name: 'LH/1 inch', price: 60 },
-          { name: 'LH/1.5 inch', price: 60 },
+          { name: 'สกรู LH/1 inch', price: 60 },
+          { name: 'สกรู LH/1.5 inch', price: 60 },
         ],
       },
       {
@@ -34,8 +37,8 @@ const ProductGroups = [
         text: 'พียู-โฟม',
         unit: 'ตารางเมตร',
         products: [
-          { name: 'LH/สีขาว', price: 60 },
-          { name: 'LH/ดำ', price: 60 },
+          { name: 'พียูโฟม LH/สีขาว', price: 60 },
+          { name: 'พียูโฟม LH/ดำ', price: 60 },
         ],
       },
     ],
@@ -43,15 +46,16 @@ const ProductGroups = [
   },
   {
     type: 'Concrete',
+    text: 'คอนกรีต',
     path: 'concrete',
     groups: [
       {
         index: 'Concrete',
         text: 'คอนกรีต',
-        unit: 'm*m',
+        unit: 'คิว',
         products: [
-          { name: 'ST-210', price: 1000 },
-          { name: 'ST-240', price: 1100 },
+          { name: 'คอนกรีต ST-210', price: 1000 },
+          { name: 'คอนกรีต ST-240', price: 1100 },
         ],
       },
     ],
@@ -59,15 +63,27 @@ const ProductGroups = [
   },
   {
     type: 'Pile',
+    text: 'เสาเข็มคอนกรีต',
     path: 'pile',
     groups: [
       {
-        index: 'Pile',
+        index: 'pile',
         text: 'เสาเข็มคอนกรีต',
-        unit: 'm',
+        unit: 'ต้น',
         products: [
-          { name: '12 inches', price: 1200 },
-          { name: '10 inches', price: 1000 },
+          { name: 'เสาเข็มคอนกรีต 4 M มีหัวชู ', price: 1400 },
+          { name: 'เสาเข็มคอนกรีต 6 M มีหัวชู', price: 1600 },
+          { name: 'เสาเข็มคอนกรีต 4 M', price: 1200 },
+          { name: 'เสาเข็มคอนกรีต 6 M', price: 1400 },
+        ],
+      },
+      {
+        index: 'dowel',
+        text: 'โดเวล',
+        unit: 'เส้น',
+        products: [
+          { name: 'โดเวล ขนาด \u2205 1" ยาว 10"', price: 1200 },
+          { name: 'โดเวล ขนาด \u2205 1/2" ยาว 10"', price: 1000 },
         ],
       },
     ],
@@ -75,43 +91,92 @@ const ProductGroups = [
   },
   {
     type: 'Slab',
+    text: 'แผ่นพื้นคอนกรีต',
     path: 'slab',
     groups: [
       {
-        index: 'Slab',
+        index: 'slab',
         text: 'แผ่นพื้นคอนกรีต',
-        unit: 'pieces',
+        unit: 'แผ่น',
         products: [
-          { name: '1.5 m/4 lines', price: 400 },
-          { name: '1.5 m/6 lines', price: 450 },
+          { name: '4 เส้น', price: 150 }, //price per meter.
+          { name: '6 เส้ร', price: 200 },
         ],
       },
     ],
     image: slabImage,
   },
   {
-    type: 'รั้วคอนกรีต',
+    type: 'Fence',
+    text: 'รั้วคอนกรีต',
     path: 'fence',
-    groups: ['รั้วคอนกรีต'],
+    groups: [
+      {
+        index: 'แผ่นรั้ว',
+        text: 'แผ่นรั้ว',
+        unit: 'แผ่น',
+        products: [
+          { name: 'แผ่นคอนกรีต 1.5 m', price: 150 },
+          { name: 'แผ่นคอนกรีต 1.5 m / 6 lines', price: 150 },
+        ],
+      },
+      {
+        index: 'เสารั้ว',
+        text: 'เสารั้ว',
+        unit: 'ต้น',
+        products: [{ name: 'เสาคอนกรีต 1.5 m', price: 400 }],
+      },
+    ],
     image: fenceImage,
   },
   {
-    type: 'RetainingWall',
+    type: 'Retainingwall',
+    text: 'กำแพงกันดิน',
     path: 'retainingwall',
-    groups: ['กำแพงกันดิน'],
+    groups: [
+      {
+        index: 'แผ่นคอนกรีต',
+        text: 'แผ่นคอนกรีต',
+        unit: 'แผ่น',
+        products: [
+          { name: 'แผ่นคอนกรีต 1.5 m / 4 lines', price: 150 },
+          { name: 'แผ่นคอนกรีต 1.5 m / 6 lines', price: 150 }, //price per piece
+        ],
+      },
+      {
+        index: 'เสาคอนกรีต',
+        text: 'เสาคอนกรีต',
+        unit: 'ต้น',
+        products: [{ name: 'เสาคอนกรีต สูง 1.5 m', price: 400 }], //price per meter per piece
+      },
+      {
+        index: 'คานคอนดิน',
+        text: 'คานคอดิน',
+        unit: 'เมตร',
+        products: [{ name: 'คานคอดิน หน้าตัด 18 cm.', price: 555 }], //price per meter
+      },
+    ],
     image: fenceImage,
   },
 ];
 
 const RoofTypes = [
   { name: 'type A', needA: true, needB: true, needC: false },
-  { name: 'type B', needA: true, needB: true, needC: true },
-  { name: 'type C', needA: true, needB: true, needC: true },
+  { name: 'type B', needA: true, needB: true, needC: false },
+  { name: 'type C', needA: true, needB: true, needC: false },
   { name: 'type D', needA: true, needB: true, needC: false },
-  { name: 'type E', needA: true, needB: true, needC: false },
-  { name: 'type F', needA: true, needB: true, needC: false },
-  { name: 'type G', needA: true, needB: true, needC: false },
+  // { name: 'type E', needA: true, needB: true, needC: false },
+  // { name: 'type F', needA: true, needB: true, needC: false },
+  // { name: 'type G', needA: true, needB: true, needC: false },
 ];
+
+const concreteUseType = [
+  { name: ' usecase A' },
+  { name: ' usecase B' },
+  { name: ' usecase C' },
+];
+
+const slabLongType = [1, 1.5, 2];
 
 const MockOrders = {
   metalsheet: {
@@ -136,4 +201,47 @@ const MockOrders = {
   },
 };
 
-export { ProductGroups, RoofTypes, MockOrders };
+const getProductPrice = (productType, productName) => {
+  const _prodGroup = R.find(R.propEq('type', productType))(ProductGroups);
+  // console.log(_prodGroup);
+  // console.log(productType);
+  let price = 0;
+  _prodGroup.groups.map(group => {
+    // console.log(group);
+    group.products.map(prod => {
+      if (productName === prod.name) {
+        console.log(prod.price);
+        price = prod.price;
+        return;
+      }
+    });
+  });
+  return price;
+};
+
+const getProductUnit = (productType, productName) => {
+  const _prodGroup = R.find(R.propEq('type', productType))(ProductGroups);
+  // console.log(_prodGroup);
+  let unit = 0;
+  _prodGroup.groups.map(group => {
+    // console.log(group);
+    group.products.map(prod => {
+      if (productName === prod.name) {
+        // console.log(prod.price);
+        unit = group.unit;
+        return;
+      }
+    });
+  });
+  return unit;
+};
+
+export {
+  ProductGroups,
+  RoofTypes,
+  MockOrders,
+  slabLongType,
+  concreteUseType,
+  getProductPrice,
+  getProductUnit,
+};

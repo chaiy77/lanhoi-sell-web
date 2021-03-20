@@ -7,7 +7,7 @@ import { ProductGroups } from 'data/mockup-data';
 
 const productGroups = ProductGroups;
 
-const GroupImage = ({ title, image }) => {
+const GroupImage = ({ title, image, path }) => {
   return (
     <div
       className={
@@ -15,9 +15,7 @@ const GroupImage = ({ title, image }) => {
         ' flex flex-col items-center justify-center rounded-md overflow-hidden'
       }
     >
-      <Link
-        to={('/' + title.toLowerCase() + '/customerdata').replace(/ /g, '')}
-      >
+      <Link to={('/' + path.toLowerCase() + '/customerdata').replace(/ /g, '')}>
         <img
           className={'m-auto block p-1'}
           src={image}
@@ -36,7 +34,13 @@ const GroupListPage = () => {
         return (
           <div className="flex flex-wrap  sm:w-full md:w-5/6 xl:w-1/2">
             {productGroups.map(group => {
-              return <GroupImage image={group.image} title={group.path} />;
+              return (
+                <GroupImage
+                  image={group.image}
+                  title={group.text}
+                  path={group.path}
+                />
+              );
             })}
           </div>
         );

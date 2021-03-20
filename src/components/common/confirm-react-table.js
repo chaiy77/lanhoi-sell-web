@@ -49,6 +49,7 @@ const ConfirmTable = ({ columns, data }) => {
                 {...row.getRowProps()}
               >
                 {row.cells.map((cell, i) => {
+                  // console.log(row.original);
                   if (row.original.type === 'group' && _isRenderGroup) {
                     _isRenderGroup = false;
                     return (
@@ -63,6 +64,7 @@ const ConfirmTable = ({ columns, data }) => {
                   }
 
                   if (row.original.type === 'product') {
+                    // console.log(cell.column, cell.column.id === 'total');
                     return (
                       <td
                         className="border px-4 py-2 "
@@ -88,7 +90,7 @@ const ConfirmTable = ({ columns, data }) => {
                       );
                     }
                     if (cell.column.id === 'total') {
-                      console.log('total');
+                      // console.log('total');
                       return (
                         <td
                           className="border-gray-900 px-4 py-2 border-t-4 border-b-4"

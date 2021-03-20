@@ -8,12 +8,18 @@ import { actions } from 'data/reducers/customer';
 import { useForm, Controller } from 'react-hook-form';
 import { Button, Select, Checkbox } from 'components/common';
 import { navigate } from 'gatsby';
+import { concreteUseType, ProductGroups } from 'data/mockup-data';
+
+const GroupName = 'Concrete';
+const Groups = R.find(R.propEq('type', GroupName))(ProductGroups);
 
 const AreaDataInput = forwardRef(
   ({ i, valueChange, register, areaData, setValue }, ref) => {
     const dataInputStyle =
       'w-4/6 shadow appearance-none border rounded py-1 px-2 mx-5 ' +
       ' text-gray-700 leading-tight focus:outline-none focus:shadow-outline';
+
+    const [useTypes, setUseTypes] = useState([]);
 
     useEffect(() => {
       // console.log('set new roofValue', roofValue);
@@ -25,6 +31,12 @@ const AreaDataInput = forwardRef(
         setValue('C_' + `${i}`, areaData.data.C);
       }
     }, [areaData]);
+
+    useEffect(() => {
+      const _useTypes = concreteUseType.map(c => c.name);
+      console.log('concrete used types :', _useTypes);
+      setUseTypes(_useTypes);
+    }, []);
 
     return (
       <div className="mt-2 border rounded p-5">
@@ -39,7 +51,7 @@ const AreaDataInput = forwardRef(
                   name={'no_' + `${i}`}
                   register={register}
                   // onChange={e => changeRoofType(e)}
-                  defaultValue={areaData.type}
+                  options={useTypes}
                 />
               </div>
             </div>
@@ -48,6 +60,7 @@ const AreaDataInput = forwardRef(
               <div className="flex flex-col  ">
                 <div className="flex flex-row mt-2 ">
                   <div className="w-1/6">กว้าง :</div>
+
                   <input
                     name={'A_' + `${i}`}
                     // defaultValue={roofData.A}
@@ -63,6 +76,8 @@ const AreaDataInput = forwardRef(
                     //   handleValueChange(e, 'A');
                     // }}
                   />
+
+                  <div className="w-1/6">เมตร</div>
                 </div>
 
                 <div className="flex flex-row mt-2 ">
@@ -82,6 +97,7 @@ const AreaDataInput = forwardRef(
                     //   handleValueChange(e, 'B');
                     // }}
                   />
+                  <div className="w-1/6">เมตร</div>
                 </div>
                 <div className="flex flex-row mt-2 ">
                   <div className="w-1/6">หนา :</div>
@@ -102,6 +118,7 @@ const AreaDataInput = forwardRef(
                     //   handleValueChange(e, 'C');
                     // }}
                   />
+                  <div className="w-1/6">เมตร</div>
                 </div>
               </div>
             </div>
@@ -145,7 +162,7 @@ const ConcreteDataComponent = ({ areaData, setConcreteData }) => {
       const _areas = areaData.map((area, i) => {
         return (
           <AreaDataInput
-            no={i + 1}
+            i={i + 1}
             key={i + 1}
             register={register}
             areaData={area}
@@ -158,7 +175,7 @@ const ConcreteDataComponent = ({ areaData, setConcreteData }) => {
     } else {
       const _area = (
         <AreaDataInput
-          no="1"
+          i="1"
           key="1"
           register={register}
           setValue={setValue}
@@ -233,9 +250,14 @@ const ConcreteDataComponent = ({ areaData, setConcreteData }) => {
           <div className="sm:w-full md:w-5/6 xl:w-1/2">
             <form onSubmit={handleSubmit(handleNext)}>
               <div className="flex flex-row justify-between">
-                <div className="text-gray-700 text-sm font-bold ">
-                  CustomerData
+                <div>
+                  <Button
+                    onClick={() => navigate('/products')}
+                    type="button"
+                    label="Back"
+                  />
                 </div>
+                <div className="flex items-center text-3xl">{Groups.text}</div>
                 <div className="flex w-auto">
                   <Button type="submit" label="Next" />
                 </div>

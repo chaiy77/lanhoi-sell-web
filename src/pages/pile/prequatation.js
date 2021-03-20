@@ -7,7 +7,12 @@ import * as R from 'ramda';
 import Layout from 'components/layout';
 import PropTypes from 'prop-types';
 import { Select, TextInput, Button } from 'components/common';
-import { ProductGroups } from 'data/mockup-data';
+import {
+  ProductGroups,
+  getProductUnit,
+  getProductPrice,
+} from 'data/mockup-data';
+// import { Pile } from 'util/calculator';
 
 //Groups need to be loaded from DB, created by admin
 const GroupName = 'Pile';
@@ -26,26 +31,104 @@ const PileProductDetail = forwardRef(
         </div>
         <div className="border border-gray-500  rounded-b-md">
           {Groups.groups.map((group, i) => {
-            console.log(area.data.A);
-            return (
-              <div className="flex flex-row my-2 py-2 px-4 " key={i}>
-                <div className="w-1/6"> เสาเข็ม </div>
-                <div className="w-3/6 mx-3 ">
-                  <Select
-                    name={`${area.no}` + '_product_' + `${group}`}
-                    register={register}
-                  />
+            console.log(area.data);
+            if (group.index === 'pile') {
+              return (
+                <div className="flex flex-row my-2 py-2 px-4 " key={i}>
+                  <div className="w-1/6"> {group.text} </div>
+
+                  <div className="w-3/6 mx-3 ">
+                    <Select
+                      name={`${area.no}` + '_product_' + `${group.index}`}
+                      register={register}
+                      options={
+                        area.data.shoe
+                          ? group.products
+                              .map(i => i.name)
+                              .filter(i => i.includes('หัวชู'))
+                          : group.products
+                              .map(i => i.name)
+                              .filter(i => !i.includes('หัวชู'))
+                      }
+                    />
+                  </div>
+                  <div className=" w-1/6 mx-3 pr-3">
+                    <input
+                      type="text"
+                      className="w-full shadow appearance-none border rounded py-1 px-1 mx-2 pr-4
+                                text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      name={`${area.no}` + '_amount_' + `${group.index}`}
+                      ref={register}
+                      defaultValue={`${area.data.A}`}
+                    />
+                  </div>
+                  <div className="w-1/6">{group.unit}</div>
                 </div>
-                <div className=" w-1/6 mx-3">
-                  <TextInput
-                    name={`${area.no}` + '_unit_' + `${group}`}
-                    register={register}
-                    defaultValue={`${area.data.A}`}
-                  />
-                </div>
-                <div className="w-1/6"> ต้น</div>
-              </div>
-            );
+              );
+            } else {
+              if (area.data.dowel) {
+                return (
+                  <div className="flex flex-row my-2 py-2 px-2 " key={i}>
+                    <div className="w-1/6 pl-2"> - {group.text} </div>
+                    <div className="w-3/6 mx-2">
+                      <div className="flex flex-row">
+                        <div className="w-1/6 ">ขนาด</div>
+                        <div className="w-1/2">
+                          <Select
+                            name={
+                              `${area.no}` +
+                              '_addon_' +
+                              `${group.index}` +
+                              '_diameter'
+                            }
+                            register={register}
+                            options={[
+                              '12 mm.',
+                              '16 mm.',
+                              '20 mm.',
+                              '25 mm.',
+                              '28 mm.',
+                            ]}
+                          />
+                        </div>
+                        <div className="w-1/4 ml-4">ยาว (m.)</div>
+                        <div className="w-1/4">
+                          <input
+                            type="text"
+                            className="w-full shadow appearance-none border rounded py-1 px-1 mx-2 pr-4
+                                      text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            name={
+                              `${area.no}` +
+                              '_addon_' +
+                              `${group.index}` +
+                              '_long'
+                            }
+                            defaultValue={0}
+                            ref={register}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className=" w-1/6 mx-3 pr-3">
+                      <input
+                        type="text"
+                        className="w-full shadow appearance-none border rounded py-1 px-1 mx-2 mr-2
+                      text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        name={
+                          `${area.no}` +
+                          '_addon_' +
+                          `${group.index}` +
+                          '_amount'
+                        }
+                        ref={register}
+                        defaultValue={`${area.data.D1}`}
+                      />
+                    </div>
+                    <div className="w-1/6">{group.unit}</div>
+                  </div>
+                );
+              }
+            }
           })}
         </div>
         <div className="text-red-700 border-red-400 mt-1 mb-3 py-2 px-4">
@@ -66,14 +149,19 @@ const PilePreQuatation = ({ areas, addOrder }) => {
     setRoofsData(areas);
   }, [areas]);
 
-  function SheetCalculation() {
-    // console.log('shhet calculation');
-    return 10;
-  }
+  const getPrice = (type, product) => {
+    return getProductPrice(type, product);
+  };
+
+  const getDowelPrice = dowel => {
+    return 111;
+  };
+
   const addToCartClick = data => {
-    console.log(' add cart click');
-    console.log(data);
-    let prodType = Groups.groups;
+    // console.log(' add cart click');
+    // console.log(data);
+    let prodType = Groups.type;
+    let prodText = Groups.text;
     let _tempOrder = {};
     let _orders = [];
     let _areas = [...areaData];
@@ -91,34 +179,71 @@ const PilePreQuatation = ({ areas, addOrder }) => {
     });
 
     R.keys(data).map(_prodKey => {
+      //   // console.log(_prodKey);
       if (R.contains('product', _prodKey)) {
         _tempOrder = {};
+        _tempOrder['addon'] = '';
+
         let _noProd = parseInt(R.split('_', _prodKey)[0]);
         let _pGroup = R.split('_', _prodKey)[2];
-
         _prod = data[_prodKey];
 
-        R.keys(data).map(_unitKey => {
-          let _noUnit = parseInt(R.split('_', _unitKey)[0]);
+        R.keys(data).map(_amountKey => {
+          let _noUnit = parseInt(R.split('_', _amountKey)[0]);
           if (
-            R.contains('unit', _unitKey) &&
-            R.contains(_pGroup, _unitKey) &&
+            R.contains('amount', _amountKey) &&
+            R.contains(_pGroup, _amountKey) &&
             _noProd === _noUnit
           ) {
-            _tempOrder[_prod] = data[_unitKey];
+            _tempOrder['name'] = _prod;
+            _tempOrder['amount'] = data[_amountKey];
+            _tempOrder['price'] = getPrice(prodType, _prod);
+            _tempOrder['unit'] = getProductUnit(prodType, _prod);
+            _tempOrder['index'] = R.split('_', _amountKey)[2];
           }
         });
+        let dowel = {};
+        R.keys(data).map(_addonKey => {
+          let _noUnit = parseInt(R.split('_', _addonKey)[0]);
+          if (
+            _noProd === _noUnit &&
+            R.contains('addon', _addonKey) &&
+            R.split('_', _addonKey)[2] === 'dowel'
+          ) {
+            // console.log(R.split('_', _amountKey)[2]);
+            // console.log(R.split('_', _addonKey)[3]);
+            // Dowel
+
+            let dowel = {};
+
+            if (R.split('_', _addonKey)[3] === 'diameter')
+              _tempOrder['addon'] =
+                _tempOrder['addon'] + 'โดเวล &#8709 ' + data[_addonKey];
+            dowel['diameter'] = data[_addonKey];
+
+            if (R.split('_', _addonKey)[3] === 'long')
+              _tempOrder['addon'] =
+                _tempOrder['addon'] + ' ยาว ' + data[_addonKey] + ' เมตร';
+            dowel['long'] = data[_addonKey];
+
+            if (R.split('_', _addonKey)[3] === 'amount')
+              _tempOrder['addon'] =
+                _tempOrder['addon'] + ' จำนวน ' + data[_addonKey] + ' เส้น';
+            dowel['amount'] = data[_addonKey];
+          }
+        });
+        _tempOrder['price'] = _tempOrder['price'] + getDowelPrice(dowel);
 
         _orders.map((order, i) => {
           if (order.no === _noProd) {
             _orders[i]['products'].push(_tempOrder);
           }
         });
-        // console.log(_orders);
       }
+      //console.log('_order :', _orders);
     });
-    let order = { group: GroupName, areas: _orders };
-    // console.log(order);
+    let order = { group: GroupName, areas: _orders, text: prodText };
+    console.log(order);
     addOrder(order);
     navigate('confirmorder');
   };

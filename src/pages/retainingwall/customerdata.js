@@ -8,11 +8,22 @@ import { useForm, Controller } from 'react-hook-form';
 import { Button, Select, Checkbox } from 'components/common';
 import { navigate } from 'gatsby';
 
+import { ProductGroups } from 'data/mockup-data';
+
+const GroupName = 'Retainingwall';
+const Groups = R.find(R.propEq('type', GroupName))(ProductGroups);
+
 const WallDataInput = forwardRef(
   ({ i, register, wallsData, setValue }, ref) => {
     const dataInputStyle =
       'w-2/5 shadow appearance-none border rounded py-1 px-2 mx-5 ' +
       'text-gray-700 leading-tight focus:outline-none focus:shadow-outline';
+
+    const [hasJoin, setHasJoin] = useState(false);
+
+    const setJoin = e => {
+      setHasJoin(e);
+    };
 
     useEffect(() => {
       // console.log('set new roofValue', roofValue);
@@ -20,6 +31,8 @@ const WallDataInput = forwardRef(
       console.log('useEffect : ', wallsData);
       if (!R.isEmpty(wallsData)) {
         setValue('A_' + `${i}`, wallsData.data.A);
+        setValue('B_' + `${i}`, wallsData.data.B.toFixed(2) + ' เมตร');
+        setValue('join_' + `${i}`, wallsData.data.join);
       }
     }, [wallsData]);
 
@@ -31,7 +44,7 @@ const WallDataInput = forwardRef(
             <div className="flex flex-row flex-wrap  ">
               <div className="flex flex-col  ">
                 <div className="flex flex-row mt-2 ">
-                  <div className="">ความยาว :</div>
+                  <div className="">ความยาวกำแพง :</div>
                   <input
                     name={'A_' + `${i}`}
                     // defaultValue={roofData.A}
@@ -48,6 +61,41 @@ const WallDataInput = forwardRef(
                     // }}
                   />
                   <div className="">เมตร</div>
+                </div>
+                <div className="flex flex-row mt-2 ">
+                  <div className="w-3/12">ความสูง :</div>
+                  <Select
+                    name={'B_' + `${i}`}
+                    // defaultValue={roofData.B}
+
+                    // disabled={!needB}
+
+                    register={register({
+                      validate: {
+                        notEmpty: value => value !== '',
+                      },
+                    })}
+                    options={[
+                      '0.50 เมตร',
+                      '1.00 เมตร',
+                      '1.50 เมตร',
+                      '2.00 เมตร',
+                      '2.50 เมตร',
+                      '3.00 เมตร',
+                    ]}
+                    // onChange={e => {
+                    //   handleValueChange(e, 'B');
+                    // }}
+                  />
+                </div>
+                <div className=" flex flex-row  mt-3 ml-6 ">
+                  <Checkbox
+                    name={'join_' + `${i}`}
+                    register={register}
+                    value={hasJoin}
+                    onCheck={e => setJoin(e)}
+                  />
+                  <div className="w-full">เชื่อมต่อกับกำแพงอื่น</div>
                 </div>
               </div>
             </div>
@@ -94,7 +142,7 @@ const WallDataComponent = ({ wallData, setWallData }) => {
       const _walls = wallData.map((wall, i) => {
         return (
           <WallDataInput
-            no={i + 1}
+            i={i + 1}
             key={i + 1}
             register={register}
             wallsData={wall}
@@ -107,7 +155,7 @@ const WallDataComponent = ({ wallData, setWallData }) => {
     } else {
       const _wall = (
         <WallDataInput
-          no="1"
+          i="1"
           key="1"
           register={register}
           setValue={setValue}
@@ -150,7 +198,10 @@ const WallDataComponent = ({ wallData, setWallData }) => {
         Object.keys(data).map((k, i) => {
           if (R.contains(_no, k)) {
             let _temp = R.split('_', k)[0];
-            let _data = data[k] * 1;
+            let _data =
+              typeof data[k] === 'string'
+                ? data[k].match(/[+-]?\d+(\.\d+)?/g)[0] * 1.0
+                : data[k] * 1;
 
             _wall['data'][_temp] = _data;
           }
@@ -170,9 +221,14 @@ const WallDataComponent = ({ wallData, setWallData }) => {
           <div className="sm:w-full md:w-5/6 xl:w-1/2">
             <form onSubmit={handleSubmit(handleNext)}>
               <div className="flex flex-row justify-between">
-                <div className="text-gray-700 text-sm font-bold ">
-                  CustomerData
+                <div>
+                  <Button
+                    onClick={() => navigate('/products')}
+                    type="button"
+                    label="Back"
+                  />
                 </div>
+                <div className="flex items-center text-3xl">{Groups.text}</div>
                 <div className="flex w-auto">
                   <Button type="submit" label="Next" />
                 </div>

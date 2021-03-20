@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link, navigate } from 'gatsby';
 
 //import Logo from 'images/sukhothai-zeroCovid-logo.png';
 
@@ -44,6 +45,7 @@ const SocialMenuItem = ({ title, iconClassName, href }) => {
 
 const NavBar = ({ title }) => {
   const [navbarOpen, setNavbarOpen] = React.useState(false);
+
   return (
     <>
       <nav
@@ -58,7 +60,8 @@ const NavBar = ({ title }) => {
               className={
                 'text-gray-800 text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-no-wrap uppercase'
               }
-              href="/"
+              href="#"
+              onClick={() => navigate('/products')}
             >
               {/* <img src={Logo} alt={title} width={100} /> */}
               <img src={''} alt={title} width={100} />

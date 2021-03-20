@@ -23,17 +23,18 @@ const getMetalsheets = (type, A, B, C = 0) => {
     return rectangle(A, B);
     // return rTriangle(A, B);
   } else if (type === 'type B') {
-    return 20;
+    return rTriangle(A, B);
   } else if (type === 'type C') {
-    return 20;
+    return rectangle(A, B);
   } else if (type === 'type D') {
     return rTriangle(A, B);
-  } else if (type === 'type E') {
-    return 20;
-  } else if (type === 'type F') {
-    return 20;
-  } else if (type === 'type G') {
-    return 20;
+
+    // } else if (type === 'type E') {
+    //   return 20;
+    // } else if (type === 'type F') {
+    //   return 20;
+    // } else if (type === 'type G') {
+    //   return 20;
   } else {
     return 0;
   }
@@ -42,20 +43,27 @@ const getMetalsheets = (type, A, B, C = 0) => {
 const getScrews = (type, A, B, C, pDist = 0) => {
   if (type === 'type A') {
     const _sheets = Math.ceil(A / _wide);
-    let _s = Math.round(A / pDist) * (_sheets + 1);
+    let _s = (Math.round(A / pDist) + 1) * (_sheets + 1);
     return _s;
   } else if (type === 'type B') {
-    return 0;
+    const _sheets = Math.ceil(A / _wide);
+    let _s = (Math.round(A / pDist) + 1) * (_sheets + 1);
+    _s = Math.round(_s / 2);
+    return _s;
   } else if (type === 'type C') {
-    return 0;
+    const _sheets = Math.ceil(A / _wide);
+    let _s = (Math.round(A / pDist) + 1) * (_sheets + 1);
+    return _s;
   } else if (type === 'type D') {
-    return 0;
-  } else if (type === 'type E') {
-    return 0;
-  } else if (type === 'type F') {
-    return 0;
-  } else if (type === 'type G') {
-    return 0;
+    const _sheets = Math.ceil(A / _wide);
+    let _s = (Math.round(A / pDist) + 1) * (_sheets + 1);
+    return _s;
+    // } else if (type === 'type E') {
+    //   return 0;
+    // } else if (type === 'type F') {
+    //   return 0;
+    // } else if (type === 'type G') {
+    //   return 0;
   } else {
     return 0;
   }
