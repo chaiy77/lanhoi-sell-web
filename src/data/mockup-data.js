@@ -205,7 +205,7 @@ const concreteUseType = [
   { name: ' usecase C' },
 ];
 
-const slabLongType = [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5];
+const slabLongType = [1, 1.45, 1.95, 2.54, 2.95, 3.45, 3.95, 4.45, 4.95];
 
 const MockOrders = {
   metalsheet: {
@@ -274,4 +274,3 @@ export {
   getProductPrice,
   getProductUnit,
 };
-
