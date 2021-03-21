@@ -1,3 +1,4 @@
+
 // Gatsby supports TypeScript natively!
 import React, { useEffect } from 'react';
 import { navigate } from 'gatsby';
@@ -123,3 +124,9 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => ({ areas: state.Customer.data });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PreData);
+
+
+const mapStateToProps = state => ({ areas: state.Customer.data });
+
+export default connect(mapStateToProps, mapDispatchToProps)(PreData);
+

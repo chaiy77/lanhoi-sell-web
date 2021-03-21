@@ -369,3 +369,4 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => ({ areaData: state.Customer.slabs });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SlabDataComponent);
+
