@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { actions } from 'data/reducers/customer';
 import { useForm, Controller } from 'react-hook-form';
+import { ErrorMessage } from '@hookform/error-message';
+
 import { Button, Select, Checkbox } from 'components/common';
 // import { slabLogType } from 'data/mockup-data';
 import { navigate } from 'gatsby';
@@ -15,7 +17,20 @@ const GroupName = 'Slab';
 const Groups = R.find(R.propEq('type', GroupName))(ProductGroups);
 
 const AreaDataInput = forwardRef(
-  ({ i, valueChange, register, areaData, setValue, removeArea }, ref) => {
+  (
+    {
+      i,
+      valueChange,
+      register,
+      unregister,
+      areaData,
+      setValue,
+      removeArea,
+      errors,
+    },
+    ref
+  ) => {
+    const [useSLong, setUseSLong] = useState(false);
     const dataInputStyle =
       'w-2/5 shadow appearance-none border rounded py-1 px-2 mx-5 ' +
       'text-gray-700 leading-tight focus:outline-none focus:shadow-outline';
@@ -31,10 +46,23 @@ const AreaDataInput = forwardRef(
       }
     }, [areaData]);
 
-    const [useSLong, setUseSLong] = useState(false);
-    // const useSLong = false;
+    useEffect(() => {
+      if (useSLong) {
+        // console.log('register');
+        register('C_' + `${i}`, {
+          validate: {
+            positiveNumber: value => parseFloat(value) > 0,
+          },
+          message: 'missing long',
+        });
+      } else if (!useSLong) {
+        // console.log('unregister');
+        unregister('C_' + `${i}`);
+      }
+    }, [useSLong]);
 
     const useSepecilaLong = e => {
+      setValue('C_' + `${i}`, 0);
       setUseSLong(e);
     };
     const remove = i => {
@@ -96,13 +124,18 @@ const AreaDataInput = forwardRef(
                     text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     disabled={!useSLong}
                     ref={
-                      !useSLong
-                        ? register
-                        : register({
-                            validate: {
-                              positiveNumber: value => parseFloat(value) > 0,
-                            },
-                          })
+                      register({
+                        validate: {
+                          positiveNumber: value => parseFloat(value) > 0,
+                        },
+                      })
+                      // useSLong
+                      //   ? register({
+                      //       validate: {
+                      //         positiveNumber: value => parseFloat(value) > 0,
+                      //       },
+                      //     })
+                      //   : register
                     }
                   />
                   <div className="ml-4">เมตร </div>
@@ -133,6 +166,7 @@ AreaDataInput.propsType = {
   i: PropTypes.number,
   valueChange: PropTypes.func,
   register: PropTypes.func,
+  unregister: PropTypes.func,
   areaData: PropTypes.object,
   setValue: PropTypes.func,
   removeArea: PropTypes.func,
@@ -142,11 +176,11 @@ AreaDataInput.defaultProps = {
   i: 1,
   valueChange: () => {},
   register: () => {},
+  unregister: () => {},
   setValue: () => {},
   removeArea: () => {},
   areaData: {
     no: 1,
-
     data: {
       A: 0,
       B: 0,
@@ -166,6 +200,8 @@ const SlabDataComponent = ({ areaData, setSlabData }) => {
               no={i + 1}
               key={i + 1}
               register={register}
+              unregister={unregister}
+              errors={errors}
               areaData={area}
               setValue={setValue}
               control={control}
@@ -178,6 +214,8 @@ const SlabDataComponent = ({ areaData, setSlabData }) => {
               no={i + 1}
               key={i + 1}
               register={register}
+              unregister={unregister}
+              errors={errors}
               areaData={area}
               setValue={setValue}
               control={control}
@@ -192,6 +230,8 @@ const SlabDataComponent = ({ areaData, setSlabData }) => {
           no="1"
           key="1"
           register={register}
+          unregister={unregister}
+          errors={errors}
           setValue={setValue}
           control={control}
         />
@@ -200,14 +240,14 @@ const SlabDataComponent = ({ areaData, setSlabData }) => {
     }
   }, [areaData]);
 
-  useEffect(() => {
-    let _temp = [...Areas];
-    // console.log(_temp);
-    _temp.map(area => {
-      console.log(area);
-    });
-    // let _data = manageData()
-  }, [Areas]);
+  // useEffect(() => {
+  //   let _temp = [...Areas];
+  //   // console.log(_temp);
+  //   // _temp.map(area => {
+  //   //   console.log(area);
+  //   // });
+  //   // let _data = manageData()
+  // }, [Areas]);
   const addNewArea = () => {
     const _area = [...Areas];
     setAreas(area =>
@@ -216,6 +256,8 @@ const SlabDataComponent = ({ areaData, setSlabData }) => {
           i={_area.length + 1}
           key={`${_area.length + 1}`}
           register={register}
+          unregister={unregister}
+          errors={errors}
           setValue={setValue}
           control={control}
           removeArea={no => removeArea(no)}
@@ -247,9 +289,14 @@ const SlabDataComponent = ({ areaData, setSlabData }) => {
         Object.keys(data).map((k, i) => {
           if (R.contains(_no, k)) {
             let _temp = R.split('_', k)[0];
+
             let _data = data[k] * 1;
-            if (_temp == 'C' && _data !== 0) {
+            if (_temp == 'B' && _data !== 0) {
               _area['data']['B'] = _data;
+              _area['data']['C'] = 0;
+            } else if (_temp == 'C' && _data !== 0) {
+              _area['data']['C'] = _data;
+              _area['data']['B'] = 0;
             }
             _area['data'][_temp] = _data;
           }
@@ -257,11 +304,13 @@ const SlabDataComponent = ({ areaData, setSlabData }) => {
         _areaData.push(_area);
       }
     });
+    // console.log(_areaData);
     return _areaData;
   };
 
   const {
     register,
+    unregister,
     handleSubmit,
     setValue,
     control,
@@ -270,34 +319,8 @@ const SlabDataComponent = ({ areaData, setSlabData }) => {
   } = useForm();
 
   const handleNext = data => {
-    let _areaData = manageData(data);
     // console.log('data :', data);
-    // let _areaData = [];
-    // Object.keys(data).map((keyName, idx) => {
-    //   //roof no.
-    //   let _area = {};
-    //   let _no = R.split('_', keyName)[1];
-    //   //roof type
-    //   _area['no'] = _no;
-    //   _area['data'] = {};
-    //   // console.log(_no);
-    //   // console.log(_type);
-    //   if (typeof R.find(R.propEq('no', _no))(_areaData) === 'undefined') {
-    //     // console.log(_area);
-    //     Object.keys(data).map((k, i) => {
-    //       if (R.contains(_no, k)) {
-    //         let _temp = R.split('_', k)[0];
-    //         let _data = data[k] * 1;
-    //         if (_temp == 'C' && _data !== 0) {
-    //           _area['data']['B'] = _data;
-    //         }
-    //         _area['data'][_temp] = _data;
-    //       }
-    //     });
-    //     _areaData.push(_area);
-    //   }
-    // });
-    // console.log(_areaData);
+    let _areaData = manageData(data);
     setSlabData(_areaData);
     navigate('slab/prequatation');
   };

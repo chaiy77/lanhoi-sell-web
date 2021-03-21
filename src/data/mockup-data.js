@@ -18,9 +18,18 @@ const ProductGroups = [
         text: 'แผ่นเมทัลชีท',
         unit: 'แผ่น',
         products: [
-          { name: 'แผ่นเมทัลชีท LH/แดง/0.5', price: 60 },
-          { name: 'แผ่นเมทัลชีท LH/เขียว/0.5', price: 60 },
-          { name: 'แผ่นเมทัลชีท LH/โปร่งแสง/0.5', price: 150 },
+          { name: 'ซิ้งค์/0.23', price: 63 },
+          { name: 'ซิ้งค์/0.30', price: 85 },
+          { name: 'ซิ้งค์/0.35', price: 95 },
+          { name: 'ซิ้งค์ BLUE/0.30', price: 95 },
+          { name: 'ซิ้งค์ BLUE/0.35', price: 105 },
+          { name: 'ซิ้งค์ BLUE/0.40', price: 115 },
+          { name: 'ซิ้งค์ BLUE/0.47', price: 160 },
+          { name: 'สีนอก/0.30', price: 85 },
+          { name: 'สีนอก/0.35', price: 100 },
+          { name: 'สี BLUE/0.30', price: 110 },
+          { name: 'อลูมิเนียม สีซิ้งค์/0.40', price: 130 },
+          { name: 'อลูมิเนียม สี/0.40', price: 165 },
         ],
       },
       {
@@ -34,11 +43,12 @@ const ProductGroups = [
       },
       {
         index: 'PU-Foam',
-        text: 'พียู-โฟม',
+        text: 'ฉนวน/พียู-โฟม',
         unit: 'ตารางเมตร',
         products: [
-          { name: 'พียูโฟม LH/สีขาว', price: 60 },
-          { name: 'พียูโฟม LH/ดำ', price: 60 },
+          { name: 'ฉนวนกันความร้อน /0.50', price: 45 },
+          { name: 'พียูโฟม/0.20', price: 130 },
+          { name: 'พียูโฟม/0.25', price: 145 },
         ],
       },
     ],
@@ -54,8 +64,16 @@ const ProductGroups = [
         text: 'คอนกรีต',
         unit: 'คิว',
         products: [
-          { name: 'คอนกรีต ST-210', price: 1000 },
-          { name: 'คอนกรีต ST-240', price: 1100 },
+          { name: 'คอนกรีต Lean', price: 1270 },
+          { name: 'คอนกรีต KSC/Cube-180', price: 1520 },
+          { name: 'คอนกรีต KSC/Cube-210', price: 1600 },
+          { name: 'คอนกรีต KSC/Cube-240', price: 1655 },
+          { name: 'คอนกรีต KSC/Cube-280', price: 1730 },
+          { name: 'คอนกรีต KSC/Cube-320', price: 1795 },
+          { name: 'คอนกรีต KSC/Cube-350', price: 1875 },
+          { name: 'คอนกรีต KSC/Cube-380', price: 1930 },
+          { name: 'คอนกรีต KSC/Cube-400', price: 2010 },
+          { name: 'คอนกรีต C+Sand', price: 1885 },
         ],
       },
     ],
@@ -70,11 +88,20 @@ const ProductGroups = [
         index: 'pile',
         text: 'เสาเข็มคอนกรีต',
         unit: 'ต้น',
+        //price per meter.
         products: [
-          { name: 'เสาเข็มคอนกรีต 4 M มีหัวชู ', price: 1400 },
-          { name: 'เสาเข็มคอนกรีต 6 M มีหัวชู', price: 1600 },
-          { name: 'เสาเข็มคอนกรีต 4 M', price: 1200 },
-          { name: 'เสาเข็มคอนกรีต 6 M', price: 1400 },
+          { name: '15 x 15', price: 210 },
+          { name: '18 x 18', price: 240 },
+          { name: '22 x 22', price: 300 },
+          { name: '26 x 26', price: 335 },
+          { name: '30 x 30', price: 415 },
+          { name: '40 x 40', price: 660 },
+          { name: '15 x 15 มีหัวชู', price: 210 },
+          { name: '18 x 18 มีหัวชู', price: 240 },
+          { name: '22 x 22 มีหัวชู ', price: 300 },
+          { name: '26 x 26 มีหัวชู', price: 335 },
+          { name: '30 x 30 มีหัวชู', price: 415 },
+          { name: '40 x 40 มีหัวชู', price: 660 },
         ],
       },
       {
@@ -99,8 +126,10 @@ const ProductGroups = [
         text: 'แผ่นพื้นคอนกรีต',
         unit: 'แผ่น',
         products: [
-          { name: '4 เส้น', price: 150 }, //price per meter.
-          { name: '6 เส้ร', price: 200 },
+          { name: '4 เส้น', price: 90 }, //price per meter.
+          { name: '5 เส้น', price: 95 },
+          { name: '6 เส้น', price: 100 },
+          { name: '7 เส้น', price: 105 },
         ],
       },
     ],
@@ -176,7 +205,7 @@ const concreteUseType = [
   { name: ' usecase C' },
 ];
 
-const slabLongType = [1, 1.5, 2];
+const slabLongType = [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5];
 
 const MockOrders = {
   metalsheet: {

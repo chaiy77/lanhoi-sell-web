@@ -101,6 +101,24 @@ const mOrder = orders => {
               total: prod.price * prod.length * prod.amount,
               type: 'product',
             });
+          } else if (prod.index === 'pile') {
+            console.log('index = pile');
+            console.log(prod);
+
+            _data.push({
+              no: _idx,
+              product: prod.name,
+              amount: prod.amount,
+              price: prod.addonPrice
+                ? Math.floor(prod.price * prod.length) + prod.addonPrice
+                : Math.floor(prod.price * prod.length),
+              unit: prod.unit,
+              total: prod.addonPrice
+                ? (Math.floor(prod.price * prod.length) + prod.addonPrice) *
+                  prod.amount
+                : Math.floor(prod.price * prod.length) * prod.amount,
+              type: 'product',
+            });
           } else if (prod.index === '') {
           } else {
             let _pName =
@@ -121,7 +139,10 @@ const mOrder = orders => {
               type: 'product',
             });
           }
-          _sum = _sum + prod.price * prod.amount;
+          console.log(prod.price);
+          _sum = prod.addonPrice
+            ? _sum + (prod.price + prod.addonPrice) * prod.amount
+            : _sum + prod.price * prod.amount;
         });
       });
     }

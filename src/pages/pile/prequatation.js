@@ -32,12 +32,12 @@ const PileProductDetail = forwardRef(
         <div className="border border-gray-500  rounded-b-md">
           {Groups.groups.map((group, i) => {
             console.log(area.data);
+            //เสาเข็มคอนกรีต
             if (group.index === 'pile') {
               return (
                 <div className="flex flex-row my-2 py-2 px-4 " key={i}>
-                  <div className="w-1/6"> {group.text} </div>
-
-                  <div className="w-3/6 mx-3 ">
+                  <div className="w-1/4"> {group.text} </div>
+                  <div className="w-2/6 mx-3 ">
                     <Select
                       name={`${area.no}` + '_product_' + `${group.index}`}
                       register={register}
@@ -50,6 +50,17 @@ const PileProductDetail = forwardRef(
                               .map(i => i.name)
                               .filter(i => !i.includes('หัวชู'))
                       }
+                    />
+                  </div>
+                  <div className="w-1/6 ml-4">ยาว (m.)</div>
+                  <div className="w-1/12">
+                    <input
+                      type="text"
+                      className="w-full shadow appearance-none border rounded py-1 px-1 mx-2 pr-4
+                                      text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      name={`${area.no}` + '_length_' + `${group.index}`}
+                      defaultValue={0}
+                      ref={register}
                     />
                   </div>
                   <div className=" w-1/6 mx-3 pr-3">
@@ -66,50 +77,48 @@ const PileProductDetail = forwardRef(
                 </div>
               );
             } else {
+              //Dowel
               if (area.data.dowel) {
                 return (
                   <div className="flex flex-row my-2 py-2 px-2 " key={i}>
-                    <div className="w-1/6 pl-2"> - {group.text} </div>
-                    <div className="w-3/6 mx-2">
-                      <div className="flex flex-row">
-                        <div className="w-1/6 ">ขนาด</div>
-                        <div className="w-1/2">
-                          <Select
-                            name={
-                              `${area.no}` +
-                              '_addon_' +
-                              `${group.index}` +
-                              '_diameter'
-                            }
-                            register={register}
-                            options={[
-                              '12 mm.',
-                              '16 mm.',
-                              '20 mm.',
-                              '25 mm.',
-                              '28 mm.',
-                            ]}
-                          />
-                        </div>
-                        <div className="w-1/4 ml-4">ยาว (m.)</div>
-                        <div className="w-1/4">
-                          <input
-                            type="text"
-                            className="w-full shadow appearance-none border rounded py-1 px-1 mx-2 pr-4
-                                      text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            name={
-                              `${area.no}` +
-                              '_addon_' +
-                              `${group.index}` +
-                              '_long'
-                            }
-                            defaultValue={0}
-                            ref={register}
-                          />
-                        </div>
-                      </div>
+                    <div className="w-1/4 pl-8"> - {group.text} </div>
+                    {/* <div className="w-3/6 "> */}
+                    {/* <div className="flex flex-row"> */}
+                    {/* <div className="w-1/6 ">ขนาด</div> */}
+                    <div className="w-4/12 mx-3">
+                      <Select
+                        name={
+                          `${area.no}` +
+                          '_addon_' +
+                          `${group.index}` +
+                          '_diameter'
+                        }
+                        register={register}
+                        options={[
+                          '12 mm.',
+                          '16 mm.',
+                          '20 mm.',
+                          '25 mm.',
+                          '28 mm.',
+                        ]}
+                      />
                     </div>
-                    <div className=" w-1/6 mx-3 pr-3">
+                    <div className="w-1/6 ml-4">ยาว (m.)</div>
+                    <div className="w-1/12">
+                      <input
+                        type="text"
+                        className="w-full shadow appearance-none border rounded py-1 px-1 mx-2 pr-4
+                                      text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        name={
+                          `${area.no}` + '_addon_' + `${group.index}` + '_long'
+                        }
+                        defaultValue={0}
+                        ref={register}
+                      />
+                    </div>
+                    {/* </div> */}
+                    {/* </div> */}
+                    <div className=" w-1/6  mx-3 pr-3">
                       <input
                         type="text"
                         className="w-full shadow appearance-none border rounded py-1 px-1 mx-2 mr-2
@@ -150,6 +159,7 @@ const PilePreQuatation = ({ areas, addOrder }) => {
   }, [areas]);
 
   const getPrice = (type, product) => {
+    // console.log(product);
     return getProductPrice(type, product);
   };
 
@@ -189,6 +199,7 @@ const PilePreQuatation = ({ areas, addOrder }) => {
         _prod = data[_prodKey];
 
         R.keys(data).map(_amountKey => {
+          // console.log(_amountKey + data[_amountKey]);
           let _noUnit = parseInt(R.split('_', _amountKey)[0]);
           if (
             R.contains('amount', _amountKey) &&
@@ -197,9 +208,17 @@ const PilePreQuatation = ({ areas, addOrder }) => {
           ) {
             _tempOrder['name'] = _prod;
             _tempOrder['amount'] = data[_amountKey];
-            _tempOrder['price'] = getPrice(prodType, _prod);
+            // _tempOrder['price'] = getPrice(prodType, _prod);
             _tempOrder['unit'] = getProductUnit(prodType, _prod);
             _tempOrder['index'] = R.split('_', _amountKey)[2];
+          }
+
+          if (
+            R.contains('length', _amountKey) &&
+            R.contains(_pGroup, _amountKey) &&
+            _noProd === _noUnit
+          ) {
+            _tempOrder['length'] = data[_amountKey];
           }
         });
         let dowel = {};
@@ -232,7 +251,9 @@ const PilePreQuatation = ({ areas, addOrder }) => {
             dowel['amount'] = data[_addonKey];
           }
         });
-        _tempOrder['price'] = _tempOrder['price'] + getDowelPrice(dowel);
+        _tempOrder['price'] = getPrice(prodType, _prod);
+        _tempOrder['addonPrice'] = getDowelPrice(dowel);
+        // _tempOrder['price'] = _tempOrder['price'] + getDowelPrice(dowel);
 
         _orders.map((order, i) => {
           if (order.no === _noProd) {
@@ -243,7 +264,7 @@ const PilePreQuatation = ({ areas, addOrder }) => {
       //console.log('_order :', _orders);
     });
     let order = { group: GroupName, areas: _orders, text: prodText };
-    console.log(order);
+    // console.log(order);
     addOrder(order);
     navigate('confirmorder');
   };

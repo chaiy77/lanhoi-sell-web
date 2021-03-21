@@ -63,6 +63,11 @@ body {
 *:focus {
   outline: none;
 }
+
+*:disabled {
+  background-color: #f5f3f0;
+}
+
 button:focus {
   outline: none;
 }
